@@ -1,0 +1,46 @@
+/* 
+==============================
+TABLE STYLES
+==============================
+*/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: var(--color-primary);
+  margin: 0 auto;
+}
+
+table thead {
+  border-bottom: 1px solid var(--color-primary);
+}
+
+table th {
+  text-align: left;
+  font-weight: 500;
+  padding: 14px 28px;
+  color: var(--color-muted-primary);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+table td {
+  padding: 12px 28px;
+  line-height: 24px;
+  border-bottom: 1px solid var(--color-muted-border);
+  text-transform: capitalize;
+}
+
+table tbody tr:nth-child(even) {
+  background: oklch(98.4% 0.003 247.858);
+}
+
+table tbody tr {
+  transition: background 0.15s ease;
+}
+
+table tbody tr:hover {
+  background: #e6fce4;
+}

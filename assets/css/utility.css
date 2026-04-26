@@ -1,0 +1,49 @@
+/* 
+==============================
+UTILITY STYLES
+==============================
+*/
+.wrapper {
+  margin: 2rem 5rem;
+}
+
+.flex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.legend {
+  font-size: 1.5rem;
+  color: var(--color-muted-primary);
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  background-color: var(--color-muted-bg);
+  border: 1px solid var(--color-secondary);
+  padding: 1rem;
+  border-radius: 5px;
+  color: var(--color-muted-primary);
+  margin-block: 1.5rem;
+}
+
+.px {
+  padding-block: 1rem;
+}
+
+.pb {
+    padding-bottom: 1rem;
+}
+.p1 {
+  padding: 1rem;
+}
+
+.rounded-container {
+  border-radius: 5px;
+  border: 1px solid var(--color-secondary);
+}
