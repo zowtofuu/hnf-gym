@@ -1,20 +1,26 @@
 <?php
 date_default_timezone_set('Asia/Manila');
+
 $DB_HOST = "localhost";
+$DB_NAME = "hnf_underground";
 $DB_USER = "root";
 $DB_PASS = "";
-$DB_NAME = "hnf_underground";
 
-// Create connection
-$conn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+try {
+    $pdo = new PDO(
+        "mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4",
+        $DB_USER,
+        $DB_PASS,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]
+    );
 
-// Check connection
-if (!$conn) {
-    die("Database connection failed: " . mysqli_connect_error());
+    $pdo->exec("SET time_zone = '+08:00'");
+} catch (PDOException $e) {
+    die("Database connection failed.");
 }
 
-// Set timezone for MySQL connection to ensure correct handling of date/time values
-$conn->query("SET time_zone = '+08:00'");
-
-// set charset to utf8mb4 for proper encoding of characters DFS: not essential
-mysqli_set_charset($conn, "utf8mb4");
+$pdo->exec("SET time_zone = '+08:00'");

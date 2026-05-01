@@ -4,14 +4,22 @@ CREATE TABLE clients (
     client_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
+    contact VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE membership_plans (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    plan_name VARCHAR(50) NOT NULL,
+
+    membership_type ENUM('member', 'non_member', 'student_senior') NOT NULL DEFAULT 'non_member',
+    pass_type ENUM('daily', 'monthly') NOT NULL,
+
     price DECIMAL(10,2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    duration_days INT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE (membership_type, pass_type)
 );
 
 CREATE TABLE subscriptions (

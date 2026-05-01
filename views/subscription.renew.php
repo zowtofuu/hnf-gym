@@ -12,12 +12,6 @@ function e(string $value): string
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 }
 
-/**
- * Compute end date from plan name.
- * Supported plans:
- * - daily   => same day
- * - monthly => +1 month -1 day
- */
 function computeEndDate(string $startDate, string $planName): string
 {
     $plan = strtolower(trim($planName));
