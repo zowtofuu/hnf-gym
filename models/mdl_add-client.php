@@ -1,53 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 
-function getMembershipTypes(PDO $pdo): array
-{
-    $sql = "SELECT DISTINCT membership_type
-            FROM membership_plans
-            ORDER BY 
-                (membership_type = 'non_member') DESC,
-                membership_type ASC";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getPassTypes(PDO $pdo): array
-{
-    $sql = "SELECT DISTINCT pass_type, duration_days
-            FROM membership_plans
-            ORDER BY 
-                (pass_type = 'daily') DESC,
-                pass_type ASC";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getMembershipPlan(PDO $pdo, string $membershipType, string $passType): ?array
-{
-    $sql = "SELECT id, membership_type, pass_type, price, duration_days
-            FROM membership_plans
-            WHERE membership_type = :membership_type
-              AND pass_type = :pass_type
-            LIMIT 1";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':membership_type' => $membershipType,
-        ':pass_type' => $passType
-    ]);
-
-    $plan = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $plan ?: null;
-}
-
 function addClientWithSubscription(
     PDO $pdo,
     string $firstName,
@@ -61,18 +14,55 @@ function addClientWithSubscription(
     try {
         $pdo->beginTransaction();
 
-        $clientSql = "INSERT INTO clients (first_name, last_name, contact)
-                      VALUES (:first_name, :last_name, :contact)";
+        // ✅ FETCH PLAN FIRST (fix undefined $plan)
+        $planSql = "SELECT membership_type, pass_type, price
+                    FROM membership_plans
+                    WHERE id = :plan_id
+                    LIMIT 1";
+
+        $planStmt = $pdo->prepare($planSql);
+        $planStmt->execute([
+            ':plan_id' => $planId
+        ]);
+
+        $plan = $planStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$plan) {
+            throw new Exception('Membership plan not found.');
+        }
+
+        // ✅ COMPUTE MEMBERSHIP EXPIRY
+        $membershipExpiresAt = null;
+
+        if ($plan['membership_type'] === 'member') {
+            $membershipExpiresAt = date('Y-m-d', strtotime('+1 year'));
+        }
+
+        // ✅ INSERT CLIENT (now with expiry)
+        $clientSql = "INSERT INTO clients (
+                        first_name,
+                        last_name,
+                        contact,
+                        membership_expires_at
+                      )
+                      VALUES (
+                        :first_name,
+                        :last_name,
+                        :contact,
+                        :membership_expires_at
+                      )";
 
         $clientStmt = $pdo->prepare($clientSql);
         $clientStmt->execute([
             ':first_name' => $firstName,
             ':last_name' => $lastName,
-            ':contact' => $contact
+            ':contact' => $contact,
+            ':membership_expires_at' => $membershipExpiresAt
         ]);
 
         $clientId = (int) $pdo->lastInsertId();
 
+        // ✅ INSERT SUBSCRIPTION
         $subscriptionSql = "INSERT INTO subscriptions (
                                 client_id,
                                 plan_id,
@@ -99,10 +89,43 @@ function addClientWithSubscription(
             ':subscription_token' => $subscriptionToken
         ]);
 
+        $subscriptionId = (int) $pdo->lastInsertId();
+
+        // ✅ SALES RECORD
+        $itemName = ucwords(str_replace('_', ' ', $plan['membership_type']))
+            . ' - '
+            . ucwords(str_replace('_', ' ', $plan['pass_type']));
+
+        $salesSql = "INSERT INTO sales (
+                        transaction_type,
+                        reference_id,
+                        client_id,
+                        item_name,
+                        quantity,
+                        amount
+                    )
+                    VALUES (
+                        'subscription',
+                        :reference_id,
+                        :client_id,
+                        :item_name,
+                        1,
+                        :amount
+                    )";
+
+        $salesStmt = $pdo->prepare($salesSql);
+        $salesStmt->execute([
+            ':reference_id' => $subscriptionId,
+            ':client_id' => $clientId,
+            ':item_name' => $itemName,
+            ':amount' => $plan['price']
+        ]);
+
         $pdo->commit();
 
         return true;
-    } catch (PDOException $e) {
+
+    } catch (Throwable $e) {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }

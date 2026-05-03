@@ -3,6 +3,8 @@
   --color-secondary: oklch(91.499% 0.01683 250.98);
   --color-accent: oklch(84.1% 0.238 128.85);
 
+  --clr-slate-500: oklch(55.4% 0.046 257.417);
+
   --color-accent-hover: oklch(84.1% 0.238 128.85 / 0.8);
 
   --color-muted: oklch(81.78% 0.04656 257.64);

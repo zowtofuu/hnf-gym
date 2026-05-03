@@ -8,6 +8,8 @@ NAVBAR STYLES
   background: var(--color-primary);
   color: var(--color-secondary);
   padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
 }
 
 .nav-container {
@@ -16,6 +18,11 @@ NAVBAR STYLES
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.logo svg {
+height: 32px;
+/* outline: 1px solid red; */
 }
 
 .nav-logo {
@@ -42,9 +49,15 @@ NAVBAR STYLES
     color 0.2s ease;
 }
 
+.nav-link.active {
+  background: var(--color-accent);
+  color: var(--color-primary);
+  pointer-events: none;
+}
+
 .nav-link:hover {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-primary);
 }
 
 .nav-toggle {

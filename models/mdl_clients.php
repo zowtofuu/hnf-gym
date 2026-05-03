@@ -42,3 +42,47 @@ function searchClients(PDO $pdo, string $searchTerm): array
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function deleteClient(PDO $pdo, int $clientId): bool
+{
+    $sql = "DELETE FROM clients WHERE client_id = :client_id";
+
+    $stmt = $pdo->prepare($sql);
+
+    return $stmt->execute([
+        ':client_id' => $clientId
+    ]);
+}
+
+function updateClient(PDO $pdo, int $clientId, string $firstName, string $lastName, string $contact): bool
+{
+    $sql = "UPDATE clients
+            SET first_name = :first_name,
+                last_name = :last_name,
+                contact = :contact
+            WHERE client_id = :client_id";
+
+    $stmt = $pdo->prepare($sql);
+
+    return $stmt->execute([
+        ':first_name' => $firstName,
+        ':last_name' => $lastName,
+        ':contact' => $contact,
+        ':client_id' => $clientId
+    ]);
+}
+
+function getClientById(PDO $pdo, int $clientId): ?array
+{
+    $sql = "SELECT client_id, first_name, last_name, contact
+            FROM clients
+            WHERE client_id = :client_id
+            LIMIT 1";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':client_id' => $clientId]);
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ?: null;
+}

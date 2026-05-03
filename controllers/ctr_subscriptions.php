@@ -7,6 +7,8 @@ require_once __DIR__ . '/../models/mdl_subscriptions.php';
 $search = trim($_GET['search'] ?? '');
 $status = trim($_GET['status'] ?? 'all');
 
+downgradeExpiredMembers($pdo);
+
 updateSubscriptionStatuses($pdo);
 
 $counts = getSubscriptionCounts($pdo);

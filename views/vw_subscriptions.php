@@ -102,7 +102,7 @@
 
                                     <?php if (($subscription['status'] ?? '') === 'expired'): ?>
                                         <a class="btn-plain"
-                                            href="subscription.renew.php?id=<?= urlencode((string) $subscription['subscription_id']) ?>">
+                                            href="ctr_subscription-renew.php?id=<?= urlencode((string) $subscription['subscription_id']) ?>">
                                             Renew
                                         </a>
                                     <?php endif; ?>

@@ -10,7 +10,7 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
-        <h2 class="legend">Clients</h2>
+        <h2>Clients</h2>
 
         <!-- CONTROLS -->
         <section>
@@ -55,6 +55,10 @@
                                 <?= htmlspecialchars($columnLabels[$column] ?? ucwords(str_replace('_', ' ', $column))) ?>
                             </th>
                         <?php endforeach; ?>
+
+                        <?php if (!empty($clients)): ?>
+                            <th>Actions</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
 
@@ -67,6 +71,22 @@
                                         <?= htmlspecialchars($client[$column] ?? '') ?>
                                     </td>
                                 <?php endforeach; ?>
+
+                                <td>
+                                    <a
+                                        href="../controllers/ctr_update-client.php?id=<?= htmlspecialchars($client['client_id']) ?>">
+                                        Edit
+                                    </a>
+
+                                    <form method="POST" action="../controllers/ctr_clients.php" style="display:inline;">
+                                        <input type="hidden" name="client_id"
+                                            value="<?= htmlspecialchars($client['client_id']) ?>">
+                                        <button type="submit" name="delete_client"
+                                            onclick="return confirm('Delete this client?');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

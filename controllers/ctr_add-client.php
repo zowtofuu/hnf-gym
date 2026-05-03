@@ -37,13 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
-        // get plan (only for ID + price, NOT for duration)
+        // fetch the plan to get its ID and validate existence
         $plan = getMembershipPlan($pdo, $membershipType, $passType);
 
         if (!$plan) {
             $errors[] = 'Selected membership plan does not exist.';
         } else {
-            // ✅ enforce date logic here (SERVER SIDE ONLY)
             $today = date('Y-m-d');
 
             if ($passType === 'daily') {

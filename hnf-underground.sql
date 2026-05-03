@@ -5,7 +5,8 @@ CREATE TABLE clients (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     contact VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    membership_expires_at DATE DEFAULT NULL;
 );
 
 CREATE TABLE membership_plans (
@@ -21,6 +22,18 @@ CREATE TABLE membership_plans (
 
     UNIQUE (membership_type, pass_type)
 );
+
+INSERT INTO membership_plans (membership_type, pass_type, price, duration_days)
+VALUES
+('member', 'daily', 80, 1),
+('member', 'monthly', 800, 30),
+('non_member', 'daily', 100, 1),
+('non_member', 'monthly', 1000, 30),
+('student_senior', 'daily', 50, 1),
+('student_senior', 'monthly', 500, 30)
+ON DUPLICATE KEY UPDATE
+price = VALUES(price),
+duration_days = VALUES(duration_days);
 
 CREATE TABLE subscriptions (
     subscription_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -84,28 +97,37 @@ CREATE TABLE attendance (
         UNIQUE (client_id, attendance_date)
 );
 
+CREATE TABLE other_products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    image_path VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
-    client_id INT NOT NULL,
-    subscription_id INT NOT NULL,
-    plan_id INT NOT NULL,
+
+    transaction_type ENUM(
+        'subscription',
+        'renewal',
+        'product',
+        'personal_training'
+    ) NOT NULL,
+
+    reference_id INT NOT NULL,
+    client_id INT DEFAULT NULL,
+
+    item_name VARCHAR(150) NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
     amount DECIMAL(10,2) NOT NULL,
-    sale_type ENUM('new_subscription', 'renewal') NOT NULL,
-    sale_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_sales_client
         FOREIGN KEY (client_id) REFERENCES clients(client_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_sales_subscription
-        FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_sales_plan
-        FOREIGN KEY (plan_id) REFERENCES membership_plans(id)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
         ON UPDATE CASCADE
 );
+
