@@ -18,22 +18,30 @@
         <?php endif; ?>
 
         <form action="../controllers/ctr_add-other-product.php" method="POST" enctype="multipart/form-data">
-            <label for="product_name">Product Name:</label>
-            <input type="text" id="product_name" name="product_name" value="<?= htmlspecialchars($_POST['product_name'] ?? '') ?>" required>
-
-            <label for="price">Price:</label>
-            <input type="number" id="price" name="price" min="0.01" step="0.01" value="<?= htmlspecialchars($_POST['price'] ?? '') ?>" required>
-
-            <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="stock" min="0" value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>" required>
-
-            <label for="image">Product Image:</label>
-            <input type="file" id="image" name="image" accept="image/*">
-
-            <button type="submit">
-                Save Product
-            </button>
-
+            <p>
+                <label for="product_name">Product Name:</label><br>
+                <input type="text" id="product_name" name="product_name"
+                    value="<?= htmlspecialchars($_POST['product_name'] ?? '') ?>" required>
+            </p>
+            <p>
+                <label for="price">Price:</label><br>
+                <input type="number" id="price" name="price" min="0.01" step="0.01"
+                    value="<?= htmlspecialchars($_POST['price'] ?? '') ?>" required>
+            </p>
+            <p>
+                <label for="stock">Stock:</label><br>
+                <input type="number" id="stock" name="stock" min="0"
+                    value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>" required>
+            </p>
+            <p>
+                <label for="image">Product Image:</label><br>
+                <input type="file" id="image" name="image" accept="image/*">
+            </p>
+            <p>
+                <button type="submit">
+                    Save Product
+                </button>
+            </p>
             <a href="../controllers/ctr_other-products.php">
                 Cancel
             </a>

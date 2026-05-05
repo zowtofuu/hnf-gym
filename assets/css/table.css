@@ -3,6 +3,11 @@
 TABLE STYLES
 ==============================
 */
+/* .table-wrapper {
+  overflow: hidden;
+  overflow-x: scroll;
+} */
+
 table {
   width: 100%;
   border-collapse: collapse;

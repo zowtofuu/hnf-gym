@@ -54,33 +54,7 @@ function hasValidSubscription(PDO $pdo, int $clientId, string $date): bool
     ]);
 
     return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
-}function getActiveSubscription(PDO $pdo, int $clientId, string $date): ?array
-{
-    $sql = "SELECT 
-                subscription_id,
-                subscription_start,
-                subscription_end,
-                status
-            FROM subscriptions
-            WHERE client_id = :client_id
-            AND status = 'active'
-            AND :date BETWEEN subscription_start AND subscription_end
-            ORDER BY subscription_end DESC
-            LIMIT 1
-    ";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':client_id' => $clientId,
-        ':date'      => $date
-    ]);
-
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $row ?: null;
 }
-
-
 
 function attendanceExists(PDO $pdo, int $clientId, string $date): bool
 {
@@ -121,4 +95,29 @@ function insertAttendance(PDO $pdo, int $clientId, string $date): bool
         ':date' => $date,
         ':time' => date('H:i:s')
     ]);
+}
+function getActiveSubscription(PDO $pdo, int $clientId, string $date): ?array
+{
+    $sql = "SELECT 
+                subscription_id,
+                subscription_start,
+                subscription_end,
+                status
+            FROM subscriptions
+            WHERE client_id = :client_id
+            AND status = 'active'
+            AND :date BETWEEN subscription_start AND subscription_end
+            ORDER BY subscription_end DESC
+            LIMIT 1
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':client_id' => $clientId,
+        ':date' => $date
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ?: null;
 }

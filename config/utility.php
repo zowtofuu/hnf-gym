@@ -14,5 +14,9 @@ function formatReadableTime($time)
 
 function formatLabel(string $value): string
 {
+    if ($value === 'student_senior') {
+        return 'Student/Senior';
+    }
+
     return ucwords(str_replace('_', ' ', $value));
 }

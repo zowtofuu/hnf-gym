@@ -12,23 +12,13 @@
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
     <div class="wrapper">
-
-        <h1>Subscriptions</h1>
-
-        <h2>Overview</h2>
-        <p><strong>Total:</strong> <?= htmlspecialchars((string) ($counts['total'] ?? 0)) ?></p>
-        <p><strong>Active:</strong> <?= htmlspecialchars((string) ($counts['active'] ?? 0)) ?></p>
-        <p><strong>Expired:</strong> <?= htmlspecialchars((string) ($counts['expired'] ?? 0)) ?></p>
-        <p><strong>Suspended:</strong> <?= htmlspecialchars((string) ($counts['suspended'] ?? 0)) ?></p>
-        <p><strong>Expiring (7 days):</strong> <?= htmlspecialchars((string) ($counts['expiring_soon'] ?? 0)) ?></p>
-
-        <h2>Search and Filter</h2>
+        <h2>Subscriptions</h2>
 
         <form method="GET" action="ctr_subscriptions.php">
-            <input class="search-input" type="text" name="search" value="<?= htmlspecialchars($search) ?>"
+            <input type="text" name="search" value="<?= htmlspecialchars($search) ?>"
                 placeholder="Search...">
 
-            <select class="date-input" name="status">
+            <select name="status">
                 <option value="all" <?= $status === 'all' ? 'selected' : '' ?>>All</option>
                 <option value="active" <?= $status === 'active' ? 'selected' : '' ?>>Active</option>
                 <option value="expired" <?= $status === 'expired' ? 'selected' : '' ?>>Expired</option>
@@ -36,84 +26,105 @@
                 <option value="expiring" <?= $status === 'expiring' ? 'selected' : '' ?>>Expiring</option>
             </select>
 
-            <button class="btn btn-txt" type="submit">Apply</button>
-            <a class="btn btn-txt" href="ctr_subscriptions.php">Reset</a>
+            <button type="submit">Apply</button>
+            <a href="ctr_subscriptions.php">Reset</a>
         </form>
 
-        <h2>Subscription List</h2>
+        <br>
 
-        <?php if (!empty($subscriptions)): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Client</th>
-                        <th>Membership Type</th>
-                        <th>Pass Type</th>
-                        <th>Price</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+        <div>
+            <strong>Total:</strong> <?= htmlspecialchars((string) ($counts['total'] ?? 0)) ?><br>
+            <strong>Active:</strong> <?= htmlspecialchars((string) ($counts['active'] ?? 0)) ?><br>
+            <strong>Expired:</strong> <?= htmlspecialchars((string) ($counts['expired'] ?? 0)) ?><br>
+            <strong>Suspended:</strong> <?= htmlspecialchars((string) ($counts['suspended'] ?? 0)) ?><br>
+            <strong>Expiring (7 days):</strong> <?= htmlspecialchars((string) ($counts['expiring_soon'] ?? 0)) ?><br>
+        </div>
 
-                <tbody>
-                    <?php foreach ($subscriptions as $subscription): ?>
+        <br>
+
+        <?php
+        $columns = [
+            'client_name' => 'Client',
+            'membership_type' => 'Membership',
+            'pass_type' => 'Pass',
+            'price' => 'Price',
+            'membership_start' => 'Membership Start',
+            'membership_end' => 'Membership End',
+            'subscription_start' => 'Pass Start',
+            'subscription_end' => 'Pass End',
+            'status' => 'Status'
+        ];
+        ?>
+        <div class="table-wrapper">
+            <?php if (!empty($subscriptions)): ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td>
-                                <?= htmlspecialchars((string) ($subscription['client_name'] ?? '')) ?>
-                            </td>
-
-                            <td>
-                                <?= htmlspecialchars(ucwords(str_replace('_', ' ', (string) ($subscription['membership_type'] ?? '')))) ?>
-                            </td>
-
-                            <td>
-                                <?= htmlspecialchars(ucwords(str_replace('_', ' ', (string) ($subscription['pass_type'] ?? '')))) ?>
-                            </td>
-
-                            <td>
-                                ₱<?= htmlspecialchars(number_format((float) ($subscription['price'] ?? 0), 2)) ?>
-                            </td>
-
-                            <td>
-                                <?= htmlspecialchars(formatReadableDate((string) $subscription['subscription_start'])) ?>
-                            </td>
-
-                            <td>
-                                <?= htmlspecialchars(formatReadableDate((string) $subscription['subscription_end'])) ?>
-                            </td>
-
-                            <td>
-                                <?= htmlspecialchars(ucfirst((string) $subscription['status'])) ?>
-                            </td>
-
-                            <td>
-                                <div class="flex">
-                                    <a class="btn-plain"
-                                        href="subscription.edit.php?id=<?= urlencode((string) $subscription['subscription_id']) ?>">
-                                        Edit
-                                    </a>
-
-                                    <a class="btn-plain"
-                                        href="subscription.viewid.php?id=<?= urlencode((string) $subscription['subscription_id']) ?>">
-                                        View
-                                    </a>
-
-                                    <?php if (($subscription['status'] ?? '') === 'expired'): ?>
-                                        <a class="btn-plain"
-                                            href="ctr_subscription-renew.php?id=<?= urlencode((string) $subscription['subscription_id']) ?>">
-                                            Renew
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
+                            <?php foreach ($columns as $label): ?>
+                                <th><?= htmlspecialchars($label) ?></th>
+                            <?php endforeach; ?>
+                            <th>Actions</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        <?php foreach ($subscriptions as $row): ?>
+                            <tr>
+                                <?php foreach ($columns as $key => $label): ?>
+                                    <td>
+                                        <?php
+                                        $value = $row[$key] ?? null;
+
+                                        switch ($key) {
+                                            case 'membership_type':
+                                                echo htmlspecialchars(membershipTypeLabel($value));
+                                                break;
+
+                                            case 'pass_type':
+                                                echo htmlspecialchars(passTypeLabel($value));
+                                                break;
+
+                                            case 'price':
+                                                echo '₱' . number_format((float) $value, 2);
+                                                break;
+
+                                            case 'membership_start':
+                                            case 'membership_end':
+                                                echo $value ? htmlspecialchars(formatReadableDate($value)) : 'N/A';
+                                                break;
+
+                                            case 'subscription_start':
+                                            case 'subscription_end':
+                                                echo htmlspecialchars(formatReadableDate($value));
+                                                break;
+
+                                            case 'status':
+                                                echo htmlspecialchars(ucfirst($value));
+                                                break;
+
+                                            default:
+                                                echo htmlspecialchars((string) $value);
+                                                break;
+                                        }
+                                        ?>
+                                    </td>
+                                <?php endforeach; ?>
+
+                                <!-- Actions column (manual on purpose) -->
+                                <td>
+                                    <a href="ctr_subscription-edit.php?id=<?= urlencode($row['subscription_id']) ?>">Edit</a>
+
+                                    <?php if (($row['status'] ?? '') === 'expired'): ?>
+                                        <a href="ctr_subscription-renew.php?id=<?= urlencode($row['subscription_id']) ?>">Renew</a>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         <?php else: ?>
-            <p>No subscriptions found.</p>
+            <?php include '../components/alert.php'; ?>
         <?php endif; ?>
 
     </div>

@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS hnf_underground;
 USE hnf_underground;
 
 CREATE TABLE clients (
@@ -5,8 +6,7 @@ CREATE TABLE clients (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     contact VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    membership_expires_at DATE DEFAULT NULL;
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE membership_plans (
@@ -14,31 +14,30 @@ CREATE TABLE membership_plans (
 
     membership_type ENUM('member', 'non_member', 'student_senior') NOT NULL DEFAULT 'non_member',
     pass_type ENUM('daily', 'monthly') NOT NULL,
-
     price DECIMAL(10,2) NOT NULL,
-    duration_days INT NOT NULL,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    UNIQUE (membership_type, pass_type)
+    UNIQUE KEY uq_membership_plan (membership_type, pass_type)
 );
 
-INSERT INTO membership_plans (membership_type, pass_type, price, duration_days)
+INSERT INTO membership_plans (membership_type, pass_type, price)
 VALUES
-('member', 'daily', 80, 1),
-('member', 'monthly', 800, 30),
-('non_member', 'daily', 100, 1),
-('non_member', 'monthly', 1000, 30),
-('student_senior', 'daily', 50, 1),
-('student_senior', 'monthly', 500, 30)
+('member', 'daily', 80),
+('member', 'monthly', 800),
+('non_member', 'daily', 100),
+('non_member', 'monthly', 1000),
+('student_senior', 'daily', 50),
+('student_senior', 'monthly', 500)
 ON DUPLICATE KEY UPDATE
-price = VALUES(price),
-duration_days = VALUES(duration_days);
+price = VALUES(price);
 
 CREATE TABLE subscriptions (
     subscription_id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     plan_id INT NOT NULL,
+    membership_start DATE NULL,
+    membership_end DATE NULL,
     subscription_start DATE NOT NULL,
     subscription_end DATE NOT NULL,
     subscription_token VARCHAR(100) NOT NULL UNIQUE,
@@ -89,10 +88,12 @@ CREATE TABLE attendance (
     attendance_date DATE NOT NULL,
     check_in_time TIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     CONSTRAINT fk_attendance_client
         FOREIGN KEY (client_id) REFERENCES clients(client_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
+
     CONSTRAINT uq_attendance_client_date
         UNIQUE (client_id, attendance_date)
 );
@@ -131,3 +132,11 @@ CREATE TABLE sales (
         ON UPDATE CASCADE
 );
 
+CREATE TABLE personal_training (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    total_sessions INT NOT NULL,
+    remaining_sessions INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE
+);

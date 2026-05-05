@@ -48,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please select a plan.';
     } elseif ($newStartDate === '') {
         $error = 'Please select a start date.';
+    } elseif (!isValidMembershipDate($newStartDate)) {
+        $error = 'Please select a valid start date.';
     } else {
         $selectedPlan = getMembershipPlanById($pdo, $newPlanId);
 
@@ -65,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $newEndDate
                 );
 
-                header('Location: ../views/vw_subscription-renew.php?id=' . $subscriptionId . '&success=1');
+                header('Location: ctr_subscription-renew.php?id=' . $subscriptionId . '&success=1');
                 exit;
             } catch (Throwable $e) {
                 $error = $e->getMessage();
@@ -79,7 +81,8 @@ $planJs = [];
 foreach ($plans as $plan) {
     $planJs[] = [
         'id' => (int) $plan['id'],
-        'pass_type' => (string) $plan['pass_type']
+        'pass_type' => (string) $plan['pass_type'],
+        'price' => (float) $plan['price']
     ];
 }
 

@@ -13,7 +13,7 @@
         <h2>Clients</h2>
 
         <!-- CONTROLS -->
-        <section>
+        <section style="display: flex; justify-content: space-between;">
             <form method="GET" action="../controllers/ctr_clients.php">
                 <input type="search" name="search" placeholder="Search client..."
                     value="<?= htmlspecialchars($searchTerm ?? '') ?>">
@@ -24,6 +24,8 @@
             </form>
             <a href="../controllers/ctr_add-client.php">Add Client</a>
         </section>
+
+        <br>
 
         <!-- TABLE -->
         <section>

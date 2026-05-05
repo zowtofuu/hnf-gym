@@ -1,13 +1,12 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/membership_rules.php';
 require_once __DIR__ . '/../config/utility.php';
 require_once __DIR__ . '/../models/mdl_subscriptions.php';
 
 $search = trim($_GET['search'] ?? '');
 $status = trim($_GET['status'] ?? 'all');
-
-downgradeExpiredMembers($pdo);
 
 updateSubscriptionStatuses($pdo);
 

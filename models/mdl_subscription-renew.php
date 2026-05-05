@@ -1,63 +1,26 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../config/membership_rules.php';
+
 function formatPlanName(array $plan): string
 {
-    $membershipType = str_replace('_', ' ', (string) $plan['membership_type']);
-    $passType = (string) $plan['pass_type'];
-
-    return ucwords($membershipType) . ' - ' . ucwords($passType);
+    return membershipPlanName($plan);
 }
 
 function computeEndDate(string $startDate, string $passType): string
 {
-    $date = new DateTime($startDate);
-
-    if ($passType === 'monthly') {
-        $date->modify('+1 month');
-        $date->modify('-1 day');
-    }
-
-    return $date->format('Y-m-d');
+    return computeMembershipEndDate($startDate, $passType);
 }
 
 function getMembershipPlans(PDO $pdo): array
 {
-    $sql = "SELECT 
-                id,
-                membership_type,
-                pass_type,
-                price,
-                duration_days
-            FROM membership_plans
-            ORDER BY 
-                FIELD(membership_type, 'non_member', 'member', 'student_senior'),
-                FIELD(pass_type, 'daily', 'monthly')";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return getEnforcedMembershipPlans($pdo);
 }
 
 function getMembershipPlanById(PDO $pdo, int $planId): ?array
 {
-    $sql = "SELECT 
-                id,
-                membership_type,
-                pass_type,
-                price,
-                duration_days
-            FROM membership_plans
-            WHERE id = ?
-            LIMIT 1";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$planId]);
-
-    $plan = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $plan ?: null;
+    return getEnforcedMembershipPlanById($pdo, $planId);
 }
 
 function getSubscriptionById(PDO $pdo, int $subscriptionId): ?array
@@ -76,8 +39,7 @@ function getSubscriptionById(PDO $pdo, int $subscriptionId): ?array
 
                 mp.membership_type,
                 mp.pass_type,
-                mp.price,
-                mp.duration_days
+                mp.price
             FROM subscriptions s
             INNER JOIN clients c 
                 ON c.client_id = s.client_id
@@ -91,7 +53,11 @@ function getSubscriptionById(PDO $pdo, int $subscriptionId): ?array
 
     $subscription = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $subscription ?: null;
+    if (!$subscription) {
+        return null;
+    }
+
+    return normalizeMembershipPlan($subscription);
 }
 
 function renewSubscription(

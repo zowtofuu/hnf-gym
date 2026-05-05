@@ -20,26 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Invalid QR code.';
         }
     } else {
-        $clientId = (int) ($_POST['client_id'] ?? 0);
+        $clientId = (int)($_POST['client_id'] ?? 0);
     }
 
     if ($clientId > 0 && $message === '') {
 
-        $subscription = getActiveSubscription($pdo, $clientId, $selectedDate);
-
-        if (!$subscription) {
+        if (!hasValidSubscription($pdo, $clientId, $selectedDate)) {
             $message = 'No valid subscription.';
 
         } elseif (attendanceExists($pdo, $clientId, $selectedDate)) {
             $message = 'Already checked in.';
 
         } elseif (insertAttendance($pdo, $clientId, $selectedDate)) {
-            $today = new DateTime($selectedDate);
-            $endDate = new DateTime($subscription['subscription_end']);
-
-            $remainingDays = $today->diff($endDate)->days;
-
-            $message = 'Check-in successful. Remaining subscription days: ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.';
+            $message = 'Check-in successful.';
 
         } else {
             $message = 'Insert failed.';

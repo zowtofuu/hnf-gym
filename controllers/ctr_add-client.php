@@ -6,16 +6,17 @@ $success = '';
 
 $membershipTypes = getMembershipTypes($pdo);
 $passTypes = getPassTypes($pdo);
+$planOptions = getMembershipPlanOptions($pdo);
+$selectedMembershipType = trim($_POST['membership_type'] ?? '');
+$selectedPassType = trim($_POST['pass_type'] ?? '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // sanitize input
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $contact = trim($_POST['contact'] ?? '');
-    $membershipType = trim($_POST['membership_type'] ?? '');
-    $passType = trim($_POST['pass_type'] ?? '');
+    $membershipType = $selectedMembershipType;
+    $passType = $selectedPassType;
 
-    // validation
     if ($firstName === '') {
         $errors[] = 'First name is required.';
     }
@@ -28,53 +29,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Contact number is required.';
     }
 
-    if ($membershipType === '') {
-        $errors[] = 'Membership type is required.';
+    if (!isValidMembershipType($membershipType)) {
+        $errors[] = 'Select a valid membership type.';
     }
 
-    if ($passType === '') {
-        $errors[] = 'Pass type is required.';
+    if (!isValidPassType($passType)) {
+        $errors[] = 'Select a valid pass type.';
     }
 
     if (empty($errors)) {
-        // fetch the plan to get its ID and validate existence
         $plan = getMembershipPlan($pdo, $membershipType, $passType);
 
         if (!$plan) {
             $errors[] = 'Selected membership plan does not exist.';
         } else {
             $today = date('Y-m-d');
+            $subscriptionStart = $today;
+            $subscriptionEnd = computeMembershipEndDate($subscriptionStart, $passType);
+            $subscriptionToken = bin2hex(random_bytes(16));
 
-            if ($passType === 'daily') {
-                $subscriptionStart = $today;
-                $subscriptionEnd = $today;
-            } elseif ($passType === 'monthly') {
-                $subscriptionStart = $today;
-                $subscriptionEnd = date('Y-m-d', strtotime('+1 month', strtotime($today)));
+            $isAdded = addClientWithSubscription(
+                $pdo,
+                $firstName,
+                $lastName,
+                $contact,
+                (int) $plan['id'],
+                $subscriptionStart,
+                $subscriptionEnd,
+                $subscriptionToken
+            );
+
+            if ($isAdded) {
+                $success = 'Client added successfully.';
+                $selectedMembershipType = '';
+                $selectedPassType = '';
+                $_POST = [];
             } else {
-                $errors[] = 'Invalid pass type.';
-            }
-
-            // continue only if no new errors
-            if (empty($errors)) {
-                $subscriptionToken = bin2hex(random_bytes(16));
-
-                $isAdded = addClientWithSubscription(
-                    $pdo,
-                    $firstName,
-                    $lastName,
-                    $contact,
-                    (int) $plan['id'],
-                    $subscriptionStart,
-                    $subscriptionEnd,
-                    $subscriptionToken
-                );
-
-                if ($isAdded) {
-                    $success = 'Client added successfully.';
-                } else {
-                    $errors[] = 'Failed to add client.';
-                }
+                $errors[] = 'Failed to add client.';
             }
         }
     }

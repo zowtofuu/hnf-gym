@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../controllers/ctr_subscription-renew.php';
-
 function e(string $value): string
 {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
@@ -54,7 +52,7 @@ function e(string $value): string
 
                 <?php foreach ($plans as $plan): ?>
                     <option value="<?= e((string) $plan['id']) ?>" <?= (int) $plan['id'] === (int) $newPlanId ? 'selected' : '' ?>>
-                        <?= e(formatPlanName($plan)) ?> - ₱<?= e(number_format((float) $plan['price'], 2)) ?>
+                        <?= e(formatPlanName($plan)) ?> - &#8369;<?= e(number_format((float) $plan['price'], 2)) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -67,7 +65,7 @@ function e(string $value): string
 
         <p>
             <label for="new_end_date">End Date</label><br>
-            <input type="date" name="new_end_date" id="new_end_date" value="<?= e($newEndDate) ?>">
+            <input type="date" name="new_end_date" id="new_end_date" value="<?= e($newEndDate) ?>" readonly>
         </p>
 
         <p>
@@ -95,7 +93,7 @@ function e(string $value): string
 
             if (passType === 'monthly') {
                 date.setMonth(date.getMonth() + 1);
-                date.setDate(date.getDate());
+                date.setDate(date.getDate() - 1);
             }
 
             return formatDate(date);

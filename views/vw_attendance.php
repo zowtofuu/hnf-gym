@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,38 +11,38 @@
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
         <h2 class="legend">Attendance List</h2>
-        
 
-        <form method="GET" action="../controllers/ctr_attendance.php">
-            <input type="text" name="search" placeholder="Search client or contact"
-                value="<?= htmlspecialchars($filters['search']) ?>">
+        <section style="display: flex; justify-content: space-between;">
+            <form method="GET" action="../controllers/ctr_attendance.php">
+                <input type="text" name="search" placeholder="Search client or contact"
+                    value="<?= htmlspecialchars($filters['search']) ?>">
 
-            <input type="date" name="date" value="<?= htmlspecialchars($filters['date']) ?>">
+                <input type="date" name="date" value="<?= htmlspecialchars($filters['date']) ?>">
 
-            <select name="membership_type">
-                <option value="all">All Membership Types</option>
-                <?php foreach ($membershipTypes as $type): ?>
-                    <option value="<?= htmlspecialchars($type) ?>" <?= $filters['membership_type'] === $type ? 'selected' : '' ?>><?= htmlspecialchars(formatLabel($type)) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+                <select name="membership_type">
+                    <option value="all">All Membership Types</option>
+                    <?php foreach ($membershipTypes as $type): ?>
+                        <option value="<?= htmlspecialchars($type) ?>" <?= $filters['membership_type'] === $type ? 'selected' : '' ?>><?= htmlspecialchars(formatLabel($type)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-            <select name="pass_type">
-                <option value="all">All Pass Types</option>
-                <?php foreach ($passTypes as $type): ?>
-                    <option value="<?= htmlspecialchars($type) ?>" <?= $filters['pass_type'] === $type ? 'selected' : '' ?>>
-                        <?= htmlspecialchars(formatLabel($type)) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+                <select name="pass_type">
+                    <option value="all">All Pass Types</option>
+                    <?php foreach ($passTypes as $type): ?>
+                        <option value="<?= htmlspecialchars($type) ?>" <?= $filters['pass_type'] === $type ? 'selected' : '' ?>>
+                            <?= htmlspecialchars(formatLabel($type)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-            <button type="submit">Filter</button>
-            <a href="../controllers/ctr_attendance.php">Reset</a>
-        </form>
-        <section>
-            <a href="../controllers/ctr_checkin.php">Check-in</a>
+                <button type="submit">Filter</button>
+                <a href="../controllers/ctr_attendance.php">Reset</a>
+            </form>
+            <section>
+                <a href="../controllers/ctr_checkin.php">Check-in</a>
+            </section>
         </section>
-
         <br>
 
         <?php if (!empty($attendanceList)): ?>

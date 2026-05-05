@@ -21,11 +21,11 @@
 
         <ul class="nav-menu" id="navMenu">
             <li><a href="../controllers/ctr_clients.php" class="nav-link <?= $currentPage === 'ctr_clients.php' ? 'active' : '' ?>">Clients</a></li>
-            <li><a href="../controllers/ctr_attendance.php" class="nav-link <?= $currentPage === 'ctr_attendance.php' ? 'active' : '' ?>"">Attendance</a></li>
-            <li><a href="../controllers/ctr_subscriptions.php" class="nav-link <?= $currentPage === 'ctr_subscriptions.php' ? 'active' : '' ?>"">Subscriptions</a></li>
-            <li><a href="../controllers/ctr_sales.php" class="nav-link <?= $currentPage === 'ctr_sales.php' ? 'active' : '' ?>"">Sales</a></li>
-            <li><a href="../controllers/ctr_personal-trainer.php" class="nav-link <?= $currentPage === 'ctr_personal-trainer.php' ? 'active' : '' ?>"">Personal Trainer</a></li>
-            <li><a href="../controllers/ctr_other-products.php" class="nav-link <?= $currentPage === 'ctr_other-products.php' ? 'active' : '' ?>"">Other Products</a></li>
+            <li><a href="../controllers/ctr_attendance.php" class="nav-link <?= $currentPage === 'ctr_attendance.php' ? 'active' : '' ?>">Attendance</a></li>
+            <li><a href="../controllers/ctr_subscriptions.php" class="nav-link <?= $currentPage === 'ctr_subscriptions.php' ? 'active' : '' ?>">Subscriptions</a></li>
+            <li><a href="../controllers/ctr_sales.php" class="nav-link <?= $currentPage === 'ctr_sales.php' ? 'active' : '' ?>">Sales</a></li>
+            <li><a href="../controllers/ctr_personal-trainer.php" class="nav-link <?= $currentPage === 'ctr_personal-trainer.php' ? 'active' : '' ?>">Personal Trainer</a></li>
+            <li><a href="../controllers/ctr_other-products.php" class="nav-link <?= $currentPage === 'ctr_other-products.php' ? 'active' : '' ?>">Other Products</a></li>
         </ul>
     </div>
 </nav>
