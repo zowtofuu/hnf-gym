@@ -66,7 +66,7 @@
                             <label for="quantity_<?= htmlspecialchars($product['product_id']) ?>">Quantity:</label>
                             <input type="number" id="quantity_<?= htmlspecialchars($product['product_id']) ?>" name="quantity" min="1" max="<?= htmlspecialchars((string) $stock) ?>" value="1" <?= $stock <= 0 ? 'disabled' : '' ?> required>
 
-                            <button type="submit" <?= $stock <= 0 ? 'disabled' : '' ?>>
+                            <button type="submit" <?= $stock <= 0 ? 'disabled' : '' ?> onclick="return confirm('Are you sure you want to buy this product?');">
                                 Buy
                             </button>
                         </form>

@@ -1,0 +1,128 @@
+label {
+  display: block;
+}
+
+input {
+  border: 1px solid var(--color-primary);
+}
+
+.px8 {
+  padding-inline: 1rem;
+}
+
+.py16 {
+  padding-block: 0.5rem;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.rounded-sm {
+  border-radius: 0.3rem;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.fv:focus-visible {
+  outline: none;
+  border: 1px solid greenyellow;
+}
+/* PRIMARY BUTTON */
+.btn-primary {
+  background-color: greenyellow;
+  border: 1px solid greenyellow;
+}
+/* SECONDARY BUTTON */
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid greenyellow;
+}
+
+.btn-anchor {
+  text-align: center;
+  text-decoration: none;
+  color: #1f1f1f;
+}
+
+/* ICON BUTTON */
+.icon-button,
+.icon-button-plain {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.3rem;
+  text-decoration: none;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    fill 0.2s ease;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+
+  color: #1f1f1f;
+  background: greenyellow;
+}
+
+.icon-button:hover {
+  background-color: yellowgreen;
+}
+
+.icon-button:active,
+.icon-button-plain:active {
+  transform: scale(0.96);
+}
+
+.icon-button svg {
+  width: 25px;
+  height: 25px;
+}
+
+/* ICON BUTTON - PLAIN */
+.icon-button-plain {
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  border: none;
+  background-color: transparent;
+  fill: var(--clr-slate-500);
+  /* outline: 1px solid red; */
+}
+
+.icon-button-plain:hover {
+  fill: yellowgreen;
+}
+
+/* FORM AS BUTTON */
+.form-as-button {
+  display: inline-flex;
+}
+
+.form-as-button button {
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  border: none;
+  background-color: transparent;
+  fill: var(--clr-slate-500);
+  cursor: pointer;
+}
+
+.form-as-button button:hover {
+  fill: yellowgreen;
+}
+
+/* section {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: baseline;
+  gap: 0.5rem;
+  padding: 1rem;
+} */

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../models/mdl_add-client.php';
+require_once __DIR__ . '/../config/utility.php';
 
 $errors = [];
 $success = '';
@@ -27,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($contact === '') {
         $errors[] = 'Contact number is required.';
+    }
+
+    if ($contact !== '' && !preg_match('/^09\d{9}$/', $contact)) {
+        $errors[] = 'Contact number must be a valid 11-digit Philippine mobile number.';
     }
 
     if (!isValidMembershipType($membershipType)) {

@@ -1,13 +1,236 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="wrapper">
-        <table></table>
-    </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample CSS</title>
+  </head>
+  <style>
+    label {
+      display: block;
+    }
+
+    .px8 {
+      padding-inline: 1rem;
+    }
+
+    .py16 {
+      padding-block: 0.5rem;
+    }
+
+    .capitalize {
+      text-transform: capitalize;
+    }
+
+    .rounded-sm {
+      border-radius: 0.3rem;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+
+    .fv:focus-visible {
+      outline: none;
+      border: 2px solid greenyellow;
+    }
+    /* PRIMARY BUTTON */
+    .btn-primary {
+      background-color: greenyellow;
+      border: 2px solid greenyellow;
+    }
+    /* SECONDARY BUTTON */
+    .btn-secondary {
+      background-color: transparent;
+      border: 2px solid greenyellow;
+    }
+
+    .btn-anchor {
+      text-align: center;
+      text-decoration: none;
+      color: #1f1f1f;
+    }
+
+    /* ICON BUTTON */
+    .icon-button,
+    .icon-button-plain {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 0.3rem;
+      text-decoration: none;
+
+      transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        fill 0.2s ease;
+    }
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+
+      color: #1f1f1f;
+      background: greenyellow;
+    }
+
+    .icon-button:hover {
+      background-color: yellowgreen;
+    }
+
+    .icon-button:active,
+    .icon-button-plain:active {
+      transform: scale(0.96);
+    }
+
+    .icon-button svg {
+      width: 24px;
+      height: 24px;
+
+      fill: currentColor;
+    }
+
+    /* ICON BUTTON - PLAIN */
+    .icon-button-plain {
+      width: 24px;
+      height: 24px;
+      outline: 1px solid red;
+    }
+
+    .icon-button-plain:hover {
+      fill: yellowgreen;
+    }
+
+    .form-as-button {
+      display: inline-flex;
+    }
+    .form-as-button button {
+      padding: 0;
+      width: 25px;
+      height: 25px;
+      border: none;
+      background-color: transparent;
+    }
+
+    section {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: baseline;
+      gap: 0.5rem;
+      padding: 1rem;
+    }
+  </style>
+  <body>
+    <section>
+      <!-- TEXT INPUT -->
+      <label class="capitalize" for="text">Text:</label>
+      <input
+        class="capitalize rounded-sm px8 py16 fv"
+        id="text"
+        placeholder="text input"
+      />
+
+      <!-- DATE INPUT -->
+      <label class="capitalize" for="date">Date:</label>
+      <input class="rounded-sm px8 py16 fv" type="date" id="date" />
+
+      <!-- SEARCH INPUT -->
+      <label class="capitalize" for="search">Search:</label>
+      <input
+        class="capitalize rounded-sm px8 py16 fv"
+        type="text"
+        id="search"
+        placeholder="search input"
+      />
+
+      <!-- SELECT INPUT -->
+      <select
+        class="capitalize rounded-sm px8 py16 fv"
+        name="options"
+        id="options"
+      >
+        <option class="capitalizeS" value="option1">Option 1</option>
+        <option class="capitalize" value="option2">Option 2</option>
+        <option class="capitalize" value="option3">Option 3</option>
+      </select>
+
+      <!-- SUBMIT BUTTON -->
+      <input
+        class="capitalize rounded-sm px8 py16 cursor-pointer btn-primary"
+        type="submit"
+        value="Submit"
+      />
+      <input
+        class="capitalize rounded-sm px8 py16 cursor-pointer btn-secondary"
+        type="submit"
+        value="Submit"
+      />
+
+      <!-- NORMAL BUTTON -->
+      <button class="capitalize rounded-sm px8 py16 cursor-pointer btn-primary">
+        Normal Button
+      </button>
+      <button
+        class="capitalize rounded-sm px8 py16 cursor-pointer btn-secondary"
+      >
+        Normal Button
+      </button>
+
+      <!-- ANCHOR BUTTON -->
+      <a class="capitalize rounded-sm px8 py16 btn-anchor btn-primary" href=""
+        >anchor button</a
+      >
+      <a class="capitalize rounded-sm px8 py16 btn-anchor btn-secondary" href=""
+        >anchor button</a
+      >
+
+      <!-- ANCHOR WITH ICON -->
+      <a class="icon-button" href="">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 -960 960 960"
+          aria-hidden="true"
+        >
+          <path
+            d="M120-680q-17 0-28.5-11.5T80-720v-120q0-17 11.5-28.5T120-880h120q17 0 28.5 11.5T280-840q0 17-11.5 28.5T240-800h-80v80q0 17-11.5 28.5T120-680Zm0 600q-17 0-28.5-11.5T80-120v-120q0-17 11.5-28.5T120-280q17 0 28.5 11.5T160-240v80h80q17 0 28.5 11.5T280-120q0 17-11.5 28.5T240-80H120Zm600 0q-17 0-28.5-11.5T680-120q0-17 11.5-28.5T720-160h80v-80q0-17 11.5-28.5T840-280q17 0 28.5 11.5T880-240v120q0 17-11.5 28.5T840-80H720Zm91.5-611.5Q800-703 800-720v-80h-80q-17 0-28.5-11.5T680-840q0-17 11.5-28.5T720-880h120q17 0 28.5 11.5T880-840v120q0 17-11.5 28.5T840-680q-17 0-28.5-11.5ZM700-200v-60h60v60h-60Zm0-120v-60h60v60h-60Zm-60 60v-60h60v60h-60Zm-60 60v-60h60v60h-60Zm-60-60v-60h60v60h-60Zm120-120v-60h60v60h-60Zm-60 60v-60h60v60h-60Zm-60-60v-60h60v60h-60Zm40-140q-17 0-28.5-11.5T520-560v-160q0-17 11.5-28.5T560-760h160q17 0 28.5 11.5T760-720v160q0 17-11.5 28.5T720-520H560ZM240-200q-17 0-28.5-11.5T200-240v-160q0-17 11.5-28.5T240-440h160q17 0 28.5 11.5T440-400v160q0 17-11.5 28.5T400-200H240Zm0-320q-17 0-28.5-11.5T200-560v-160q0-17 11.5-28.5T240-760h160q17 0 28.5 11.5T440-720v160q0 17-11.5 28.5T400-520H240Zm20 260h120v-120H260v120Zm0-320h120v-120H260v120Zm320 0h120v-120H580v120Z"
+          />
+        </svg>
+      </a>
+
+      <!-- ANCHOR WITH ICON - PLAIN -->
+      <a class="icon-button-plain" href="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+          <path
+            d="M480-200q-135 0-245-67.5T65-446q-7-13-10-26.5T52-500q0-14 3-27.5T65-554q60-111 170-178.5T480-800q135 0 245 67.5T895-554q7 13 10 26.5t3 27.5q0 14-3 27.5T895-446q-60 111-170 178.5T480-200Zm-320.5 50.5Q144-146 127-160q-17-15-33-32t-29-36q-10-14-5.5-28.5T77-279q13-8 29-6.5t30 19.5q10 14 21.5 25t24.5 22q14 12 13.5 28T185-164q-10 11-25.5 14.5ZM480-280q115 0 209-59t144-161q-50-102-144-161t-209-59q-115 0-209 59T127-500q50 102 144 161t209 59ZM439-81q-2 15-14.5 26T390-47q-27-4-53.5-10T284-72q-20-7-26-23t-1-30q5-14 18.5-23t31.5-2q25 9 50.5 14.5T409-126q18 2 25 16t5 29Zm41-239q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm45 282q8-14 27-16 26-4 51-10t50-15q17-6 30.5 3t18.5 23q5 14-1.5 30T673-71q-26 9-52 14.5T568-47q-22 3-34.5-8T519-81q-2-15 6-29Zm237.5-80.5Q762-207 777-219t28-25.5q13-13.5 24-29.5 10-14 25.5-14t27.5 9q12 9 16 25t-10 35q-12 17-25.5 31T833-160q-17 14-33.5 11T773-163q-10-11-10.5-27.5ZM480-500Z"
+          />
+        </svg>
+      </a>
+
+      <!-- FORM AS BUTTON -->
+      <form
+        class="form-as-button"
+        method="POST"
+        action="../controllers/ctr_clients.php"
+      >
+        <input
+          type="hidden"
+          name="client_id"
+          value="<?= htmlspecialchars($client['client_id']) ?>"
+        />
+        <button
+          class="icon-button-plain"
+          type="submit"
+          name="delete_client"
+          onclick="return confirm('Delete this client?');"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M200-200h57l391-391-57-57-391 391v57Zm-40 80q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm600-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"
+            />
+          </svg>
+        </button>
+      </form>
+    </section>
+  </body>
 </html>

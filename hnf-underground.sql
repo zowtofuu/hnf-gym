@@ -107,6 +107,15 @@ CREATE TABLE other_products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE other_pricings (
+    pricing_id INT AUTO_INCREMENT PRIMARY KEY,
+    item VARCHAR(100) NOT NULL UNIQUE,
+    price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO other_pricings (item, price)
+VALUES ('annual_mem_fee', 500.00);
+
 CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
 

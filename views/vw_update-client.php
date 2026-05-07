@@ -25,7 +25,8 @@
                 <input type="text" name="last_name" value="<?= htmlspecialchars($client['last_name']) ?>" required>
 
                 <label>Contact:</label>
-                <input type="text" name="contact" value="<?= htmlspecialchars($client['contact']) ?>" required>
+                <input type="text" id="contact" name="contact" value="<?= htmlspecialchars($client['contact']) ?>"
+                    pattern="09[0-9]{9}" maxlength="11" inputmode="numeric" placeholder="09XXXXXXXXX" required>
 
                 <button type="submit">Update Client</button>
                 <a href="../controllers/ctr_clients.php">Cancel</a>
@@ -33,6 +34,21 @@
 
         <?php endif; ?>
     </div>
+    <script>
+        const contactInput = document.getElementById('contact');
+
+        contactInput.addEventListener('input', function () {
+            this.value = this.value
+                .replace(/\D/g, '')
+                .slice(0, 11);
+
+            if (!this.value.startsWith('09')) {
+                if (this.value.length >= 2) {
+                    this.value = '09';
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

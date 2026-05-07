@@ -1,9 +1,4 @@
-
 <?php
-function hnfAddClientE(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-}
 
 $planPrices = [];
 
@@ -32,48 +27,34 @@ foreach ($planOptions as $plan) {
                 <strong>Please fix the following:</strong>
                 <ul>
                     <?php foreach ($errors as $error): ?>
-                        <li><?= hnfAddClientE((string) $error) ?></li>
+                        <li><?= sanitize((string) $error) ?></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
         <?php endif; ?>
 
         <?php if ($success !== ''): ?>
-            <p><strong><?= hnfAddClientE($success) ?></strong></p>
+            <p><strong><?= sanitize($success) ?></strong></p>
         <?php endif; ?>
 
         <form method="POST" action="../controllers/ctr_add-client.php">
             <p>
                 <label for="first_name">First Name</label><br>
-                <input
-                    type="text"
-                    name="first_name"
-                    id="first_name"
-                    value="<?= hnfAddClientE((string) ($_POST['first_name'] ?? '')) ?>"
-                    required
-                >
+                <input type="text" name="first_name" id="first_name"
+                    value="<?= sanitize((string) ($_POST['first_name'] ?? '')) ?>" required>
             </p>
 
             <p>
                 <label for="last_name">Last Name</label><br>
-                <input
-                    type="text"
-                    name="last_name"
-                    id="last_name"
-                    value="<?= hnfAddClientE((string) ($_POST['last_name'] ?? '')) ?>"
-                    required
-                >
+                <input type="text" name="last_name" id="last_name"
+                    value="<?= sanitize((string) ($_POST['last_name'] ?? '')) ?>" required>
             </p>
 
             <p>
                 <label for="contact">Contact Number</label><br>
-                <input
-                    type="text"
-                    name="contact"
-                    id="contact"
-                    value="<?= hnfAddClientE((string) ($_POST['contact'] ?? '')) ?>"
-                    required
-                >
+                <input type="text" name="contact" id="contact"
+                    value="<?= sanitize((string) ($_POST['contact'] ?? '')) ?>" pattern="09[0-9]{9}" maxlength="11"
+                    inputmode="numeric" placeholder="09XXXXXXXXX" required>
             </p>
 
             <p>
@@ -81,8 +62,8 @@ foreach ($planOptions as $plan) {
                 <select name="membership_type" id="membership_type" required>
                     <option value="">Select membership type</option>
                     <?php foreach ($membershipTypes as $value => $label): ?>
-                        <option value="<?= hnfAddClientE((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
-                            <?= hnfAddClientE((string) $label) ?>
+                        <option value="<?= sanitize((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
+                            <?= sanitize((string) $label) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -93,8 +74,8 @@ foreach ($planOptions as $plan) {
                 <select name="pass_type" id="pass_type" required>
                     <option value="">Select pass type</option>
                     <?php foreach ($passTypes as $value => $label): ?>
-                        <option value="<?= hnfAddClientE((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
-                            <?= hnfAddClientE((string) $label) ?>
+                        <option value="<?= sanitize((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
+                            <?= sanitize((string) $label) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -134,6 +115,20 @@ foreach ($planOptions as $plan) {
         membershipSelect.addEventListener('change', refreshPrice);
         passSelect.addEventListener('change', refreshPrice);
         refreshPrice();
+
+        const contactInput = document.getElementById('contact');
+
+        contactInput.addEventListener('input', function () {
+            this.value = this.value
+                .replace(/\D/g, '')
+                .slice(0, 11);
+
+            if (!this.value.startsWith('09')) {
+                if (this.value.length >= 2) {
+                    this.value = '09';
+                }
+            }
+        });
     </script>
 </body>
 
