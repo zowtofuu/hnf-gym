@@ -124,6 +124,7 @@ CREATE TABLE sales (
         'renewal',
         'product',
         'personal_training'
+        'annual_membership'
     ) NOT NULL,
 
     reference_id INT NOT NULL,

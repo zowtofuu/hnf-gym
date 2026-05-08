@@ -26,6 +26,17 @@ function getMembershipPlanOptions(PDO $pdo): array
     return getEnforcedMembershipPlans($pdo);
 }
 
+function getOtherPricing(PDO $pdo, string $item): ?float
+{
+    $sql = "SELECT amount FROM other_pricings WHERE item = :item LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':item' => $item]);
+
+    $amount = $stmt->fetchColumn();
+
+    return $amount !== false ? (float) $amount : null;
+}
+
 function addClientWithSubscription(
     PDO $pdo,
     string $firstName,
@@ -51,33 +62,8 @@ function addClientWithSubscription(
 
         $clientId = (int) $pdo->lastInsertId();
 
-        $subscriptionSql = "INSERT INTO subscriptions (
-                                client_id,
-                                plan_id,
-                                subscription_start,
-                                subscription_end,
-                                subscription_token,
-                                status
-                            )
-                            VALUES (
-                                :client_id,
-                                :plan_id,
-                                :subscription_start,
-                                :subscription_end,
-                                :subscription_token,
-                                'active'
-                            )";
-
-        $subscriptionStmt = $pdo->prepare($subscriptionSql);
-        $subscriptionStmt->execute([
-            ':client_id' => $clientId,
-            ':plan_id' => $planId,
-            ':subscription_start' => $subscriptionStart,
-            ':subscription_end' => $subscriptionEnd,
-            ':subscription_token' => $subscriptionToken
-        ]);
-
-        $subscriptionId = (int) $pdo->lastInsertId();
+        $membershipStart = null;
+        $membershipEnd = null;
 
         $plan = getEnforcedMembershipPlanById($pdo, $planId);
 
@@ -85,7 +71,46 @@ function addClientWithSubscription(
             throw new Exception('Membership plan not found.');
         }
 
+        if ($plan['membership_type'] === 'member') {
+            $membershipStart = date('Y-m-d');
+            $membershipEnd = date('Y-m-d', strtotime('+1 year'));
+        }
+
+        $subscriptionSql = "INSERT INTO subscriptions (
+                            client_id,
+                            plan_id,
+                            membership_start,
+                            membership_end,
+                            subscription_start,
+                            subscription_end,
+                            subscription_token,
+                            status
+                            ) VALUES (
+                            :client_id,
+                            :plan_id,
+                            :membership_start,
+                            :membership_end,
+                            :subscription_start,
+                            :subscription_end,
+                            :subscription_token,
+                            'active'
+                        )";
+
+        $subscriptionStmt = $pdo->prepare($subscriptionSql);
+        $subscriptionStmt->execute([
+            ':client_id' => $clientId,
+            ':plan_id' => $planId,
+            ':membership_start' => $membershipStart,
+            ':membership_end' => $membershipEnd,
+            ':subscription_start' => $subscriptionStart,
+            ':subscription_end' => $subscriptionEnd,
+            ':subscription_token' => $subscriptionToken
+        ]);
+
+        $subscriptionId = (int) $pdo->lastInsertId();
+
         $itemName = membershipPlanName($plan);
+        $annualFee = getOtherPricing($pdo, 'annual_membership_fee');
 
         $salesSql = "INSERT INTO sales (
                         transaction_type,
@@ -111,6 +136,30 @@ function addClientWithSubscription(
             ':item_name' => $itemName,
             ':amount' => $plan['price']
         ]);
+
+        if ($plan['membership_type'] === 'member') {
+            $annualFeeSql = "
+        INSERT INTO sales (
+            transaction_type,
+            reference_id,
+            client_id,
+            item_name,
+            quantity,
+            amount
+        ) VALUES (
+            'annual_membership',
+            :reference_id,
+            :client_id,
+            :amount => $annualFee
+        )
+    ";
+
+            $annualFeeStmt = $pdo->prepare($annualFeeSql);
+            $annualFeeStmt->execute([
+                ':reference_id' => $subscriptionId,
+                ':client_id' => $clientId
+            ]);
+        }
 
         $pdo->commit();
 
