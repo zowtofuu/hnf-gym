@@ -10,6 +10,10 @@
       display: block;
     }
 
+    input {
+      border: 1px solid var(--color-primary);
+    }
+
     .px8 {
       padding-inline: 1rem;
     }
@@ -32,17 +36,17 @@
 
     .fv:focus-visible {
       outline: none;
-      border: 2px solid greenyellow;
+      border: 1px solid greenyellow;
     }
     /* PRIMARY BUTTON */
     .btn-primary {
       background-color: greenyellow;
-      border: 2px solid greenyellow;
+      border: 1px solid greenyellow;
     }
     /* SECONDARY BUTTON */
     .btn-secondary {
       background-color: transparent;
-      border: 2px solid greenyellow;
+      border: 1px solid greenyellow;
     }
 
     .btn-anchor {
@@ -85,40 +89,42 @@
     }
 
     .icon-button svg {
-      width: 24px;
-      height: 24px;
-
-      fill: currentColor;
+      width: 25px;
+      height: 25px;
     }
 
     /* ICON BUTTON - PLAIN */
     .icon-button-plain {
-      width: 24px;
-      height: 24px;
-      outline: 1px solid red;
+      padding: 0;
+      width: 25px;
+      height: 25px;
+      border: none;
+      background-color: transparent;
+      fill: var(--clr-slate-500);
+      /* outline: 1px solid red; */
     }
 
     .icon-button-plain:hover {
       fill: yellowgreen;
     }
 
+    /* FORM AS BUTTON */
     .form-as-button {
       display: inline-flex;
     }
+
     .form-as-button button {
       padding: 0;
       width: 25px;
       height: 25px;
       border: none;
       background-color: transparent;
+      fill: var(--clr-slate-500);
+      cursor: pointer;
     }
 
-    section {
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: baseline;
-      gap: 0.5rem;
-      padding: 1rem;
+    .form-as-button button:hover {
+      fill: yellowgreen;
     }
   </style>
   <body>

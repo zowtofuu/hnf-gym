@@ -34,61 +34,51 @@ foreach ($planOptions as $plan) {
         <?php endif; ?>
 
         <?php if ($success !== ''): ?>
-            <p><strong><?= sanitize($success) ?></strong></p>
+            <strong><?= sanitize($success) ?></strong>
         <?php endif; ?>
 
-        <form method="POST" action="../controllers/ctr_add-client.php">
-            <p>
-                <label for="first_name">First Name</label><br>
-                <input type="text" name="first_name" id="first_name"
-                    value="<?= sanitize((string) ($_POST['first_name'] ?? '')) ?>" required>
-            </p>
+        <form class="forms-center" method="POST" action="../controllers/ctr_add-client.php">
 
-            <p>
-                <label for="last_name">Last Name</label><br>
-                <input type="text" name="last_name" id="last_name"
-                    value="<?= sanitize((string) ($_POST['last_name'] ?? '')) ?>" required>
-            </p>
+            <label for="first_name">First Name</label>
+            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="first_name" id="first_name"
+                value="<?= sanitize((string) ($_POST['first_name'] ?? '')) ?>" required>
 
-            <p>
-                <label for="contact">Contact Number</label><br>
-                <input type="text" name="contact" id="contact"
-                    value="<?= sanitize((string) ($_POST['contact'] ?? '')) ?>" pattern="09[0-9]{9}" maxlength="11"
-                    inputmode="numeric" placeholder="09XXXXXXXXX" required>
-            </p>
+            <label for="last_name">Last Name</label>
+            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="last_name" id="last_name"
+                value="<?= sanitize((string) ($_POST['last_name'] ?? '')) ?>" required>
 
-            <p>
-                <label for="membership_type">Membership Type</label><br>
-                <select name="membership_type" id="membership_type" required>
-                    <option value="">Select membership type</option>
-                    <?php foreach ($membershipTypes as $value => $label): ?>
-                        <option value="<?= sanitize((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
-                            <?= sanitize((string) $label) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
+            <label for="contact">Contact Number</label>
+            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="contact" id="contact"
+                value="<?= sanitize((string) ($_POST['contact'] ?? '')) ?>" pattern="09[0-9]{9}" maxlength="11"
+                inputmode="numeric" placeholder="09XXXXXXXXX" required>
 
-            <p>
-                <label for="pass_type">Pass Type</label><br>
-                <select name="pass_type" id="pass_type" required>
-                    <option value="">Select pass type</option>
-                    <?php foreach ($passTypes as $value => $label): ?>
-                        <option value="<?= sanitize((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
-                            <?= sanitize((string) $label) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
+            
 
-            <p>
-                <strong>Price:</strong> <span id="plan_price">-</span>
-            </p>
+            <label for="pass_type">Pass Type</label>
+            <select class="capitalize rounded-sm px8 py16 fv" name="pass_type" id="pass_type" required>
+                <option value="">Select pass type</option>
+                <?php foreach ($passTypes as $value => $label): ?>
+                    <option value="<?= sanitize((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selecte d': '' ?>>
+                        <?= sanitize((string) $label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-            <p>
-                <button type="submit">Add Client</button>
-                <a href="../controllers/ctr_clients.php">Cancel</a>
-            </p>
+            <label for="membership_type">Membership Type</label>
+            <select class="capitalize rounded-sm px8 py16 fv" name="membership_type" id="membership_type" required>
+                <option value="">Select membership type</option>
+                <?php foreach ($membershipTypes as $value => $label): ?>
+                    <option value="<?= sanitize((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
+                        <?= sanitize((string) $label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
+            <strong>Price:</strong> <span id="plan_price">-</span>
+
+            <button type="submit">Add Client</button>
+            <a href="../controllers/ctr_clients.php">Cancel</a>
+
         </form>
     </div>
 
