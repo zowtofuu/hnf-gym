@@ -1,12 +1,3 @@
-<?php
-
-$planPrices = [];
-
-foreach ($planOptions as $plan) {
-    $planPrices[(string) $plan['membership_type']][(string) $plan['pass_type']] = (float) $plan['price'];
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,106 +10,173 @@ foreach ($planOptions as $plan) {
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
+    <?php
+    $errors = $errors ?? [];
+    $old = $old ?? [];
+    $plans = $plans ?? [];
+    $annualMembershipFee = (float) ($annualMembershipFee ?? 0);
+
+    $selectedMembershipType = (string) ($old['membership_type'] ?? 'non_member');
+    $selectedPassType = (string) ($old['pass_type'] ?? 'daily');
+
+    $membershipTypes = membershipTypeLabels();
+    $passTypes = passTypeLabels();
+    ?>
+
     <div class="wrapper">
         <h1>Add Client</h1>
 
         <?php if (!empty($errors)): ?>
-            <div>
-                <strong>Please fix the following:</strong>
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= sanitize((string) $error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
+            <div role="alert">
+                <?php foreach ($errors as $error): ?>
+                    <p><?= htmlspecialchars((string) $error) ?></p>
+                <?php endforeach; ?>
             </div>
-        <?php endif; ?>
-
-        <?php if ($success !== ''): ?>
-            <strong><?= sanitize($success) ?></strong>
         <?php endif; ?>
 
         <form class="forms-center" method="POST" action="../controllers/ctr_add-client.php">
 
-            <label for="first_name">First Name</label>
-            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="first_name" id="first_name"
-                value="<?= sanitize((string) ($_POST['first_name'] ?? '')) ?>" required>
+            <!-- FIRST NAME -->
+            <div>
+                <label for="first_name">First Name</label>
+                <input
+                    class="capitalize rounded-sm px8 py16 fv"
+                    type="text"
+                    name="first_name"
+                    id="first_name"
+                    value="<?= htmlspecialchars((string) ($old['first_name'] ?? '')) ?>"
+                    required>
+            </div>
 
-            <label for="last_name">Last Name</label>
-            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="last_name" id="last_name"
-                value="<?= sanitize((string) ($_POST['last_name'] ?? '')) ?>" required>
+            <!-- LAST NAME -->
+            <div>
+                <label for="last_name">Last Name</label>
+                <input
+                    class="capitalize rounded-sm px8 py16 fv"
+                    type="text"
+                    name="last_name"
+                    id="last_name"
+                    value="<?= htmlspecialchars((string) ($old['last_name'] ?? '')) ?>"
+                    required>
+            </div>
 
-            <label for="contact">Contact Number</label>
-            <input class="capitalize rounded-sm px8 py16 fv" type="text" name="contact" id="contact"
-                value="<?= sanitize((string) ($_POST['contact'] ?? '')) ?>" pattern="09[0-9]{9}" maxlength="11"
-                inputmode="numeric" placeholder="09XXXXXXXXX" required>
+            <!-- CONTACT NUMBER -->
+            <div>
+                <label for="contact">Contact Number</label>
+                <input
+                    class="rounded-sm px8 py16 fv"
+                    type="text"
+                    name="contact"
+                    id="contact"
+                    value="<?= htmlspecialchars((string) ($old['contact'] ?? '')) ?>"
+                    pattern="09[0-9]{9}"
+                    maxlength="11"
+                    inputmode="numeric"
+                    placeholder="09XXXXXXXXX"
+                    required>
+            </div>
 
-            
+            <!-- MEMBERSHIP TYPE -->
+            <div>
+                <label for="membership_type">Membership Type</label>
+                <select class="capitalize rounded-sm px8 py16 fv" name="membership_type" id="membership_type" required>
+                    <?php foreach ($membershipTypes as $value => $label): ?>
+                        <option
+                            value="<?= htmlspecialchars((string) $value) ?>"
+                            <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
+                            <?= htmlspecialchars((string) $label) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <label for="pass_type">Pass Type</label>
-            <select class="capitalize rounded-sm px8 py16 fv" name="pass_type" id="pass_type" required>
-                <option value="">Select pass type</option>
-                <?php foreach ($passTypes as $value => $label): ?>
-                    <option value="<?= sanitize((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selecte d': '' ?>>
-                        <?= sanitize((string) $label) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <!-- PASS TYPE -->
+            <div>
+                <label for="pass_type">Pass Type</label>
+                <select class="capitalize rounded-sm px8 py16 fv" name="pass_type" id="pass_type" required>
+                    <?php foreach ($passTypes as $value => $label): ?>
+                        <option
+                            value="<?= htmlspecialchars((string) $value) ?>"
+                            <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
+                            <?= htmlspecialchars((string) $label) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <label for="membership_type">Membership Type</label>
-            <select class="capitalize rounded-sm px8 py16 fv" name="membership_type" id="membership_type" required>
-                <option value="">Select membership type</option>
-                <?php foreach ($membershipTypes as $value => $label): ?>
-                    <option value="<?= sanitize((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
-                        <?= sanitize((string) $label) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <!-- PRICES -->
+            <div>
+                <span>Plan Fee: </span>
+                <span id="plan_price">-</span>
+            </div>
 
-            <strong>Price:</strong> <span id="plan_price">-</span>
+            <div>
+                <span>Annual Membership Fee: </span>
+                <span id="annual_fee">-</span>
+            </div>
 
-            <button type="submit">Add Client</button>
-            <a href="../controllers/ctr_clients.php">Cancel</a>
+            <div>
+                <strong>Total: </strong>
+                <strong id="total_price">-</strong>
+            </div>
 
+            <!-- CONTROLS -->
+            <div>
+                <button type="submit">Add Client</button>
+                <a href="../controllers/ctr_clients.php">Cancel</a>
+            </div>
         </form>
     </div>
 
     <script>
-        const planPrices = <?= json_encode($planPrices, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
-        const membershipSelect = document.getElementById('membership_type');
-        const passSelect = document.getElementById('pass_type');
-        const priceOutput = document.getElementById('plan_price');
+        const plans = <?= json_encode($plans, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+        const annualMembershipFee = <?= json_encode($annualMembershipFee, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
-        function formatPrice(price) {
-            return '&#8369;' + Number(price).toLocaleString('en-PH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+        const membershipTypeInput = document.getElementById('membership_type');
+        const passTypeInput = document.getElementById('pass_type');
+        const planPriceOutput = document.getElementById('plan_price');
+        const annualFeeOutput = document.getElementById('annual_fee');
+        const totalPriceOutput = document.getElementById('total_price');
+
+        function formatPeso(value) {
+            const amount = Number(value || 0);
+
+            return amount.toLocaleString('en-PH', {
+                style: 'currency',
+                currency: 'PHP'
             });
         }
 
-        function refreshPrice() {
-            const pricesByPass = planPrices[membershipSelect.value] || {};
-            const price = pricesByPass[passSelect.value];
+        function updatePlanPrice() {
+            const selectedPlan = plans.find((plan) => {
+                return plan.membership_type === membershipTypeInput.value &&
+                    plan.pass_type === passTypeInput.value;
+            });
 
-            priceOutput.innerHTML = price ? formatPrice(price) : '-';
+            if (!selectedPlan) {
+                planPriceOutput.textContent = '-';
+                annualFeeOutput.textContent = '-';
+                totalPriceOutput.textContent = '-';
+                return;
+            }
+
+            const planPrice = Number(selectedPlan.price || 0);
+
+            const memberFee = membershipTypeInput.value === 'member'
+                ? Number(annualMembershipFee || 0)
+                : 0;
+
+            const totalPrice = planPrice + memberFee;
+
+            planPriceOutput.textContent = formatPeso(planPrice);
+            annualFeeOutput.textContent = memberFee > 0 ? formatPeso(memberFee) : '-';
+            totalPriceOutput.textContent = formatPeso(totalPrice);
         }
 
-        membershipSelect.addEventListener('change', refreshPrice);
-        passSelect.addEventListener('change', refreshPrice);
-        refreshPrice();
+        membershipTypeInput.addEventListener('change', updatePlanPrice);
+        passTypeInput.addEventListener('change', updatePlanPrice);
 
-        const contactInput = document.getElementById('contact');
-
-        contactInput.addEventListener('input', function () {
-            this.value = this.value
-                .replace(/\D/g, '')
-                .slice(0, 11);
-
-            if (!this.value.startsWith('09')) {
-                if (this.value.length >= 2) {
-                    this.value = '09';
-                }
-            }
-        });
+        updatePlanPrice();
     </script>
 </body>
 

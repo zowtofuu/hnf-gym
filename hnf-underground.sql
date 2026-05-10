@@ -123,7 +123,7 @@ CREATE TABLE sales (
         'subscription',
         'renewal',
         'product',
-        'personal_training'
+        'personal_training',
         'annual_membership'
     ) NOT NULL,
 

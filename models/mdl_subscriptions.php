@@ -3,13 +3,12 @@ require_once __DIR__ . '/../config/database.php';
 
 function updateSubscriptionStatuses(PDO $pdo): void
 {
-    $sql = "
-        UPDATE subscriptions
-        SET status = CASE
+    $sql = "UPDATE subscriptions
+             SET status = CASE
             WHEN status = 'suspended' THEN 'suspended'
             WHEN subscription_end < CURDATE() THEN 'expired'
             ELSE 'active'
-        END
+            END
     ";
 
     $pdo->prepare($sql)->execute();
@@ -17,13 +16,12 @@ function updateSubscriptionStatuses(PDO $pdo): void
 
 function getSubscriptionCounts(PDO $pdo): array
 {
-    $sql = "
-        SELECT
+    $sql = "SELECT
             COUNT(*) AS total,
             SUM(status = 'active') AS active,
             SUM(status = 'expired') AS expired,
             SUM(status = 'suspended') AS suspended
-        FROM subscriptions
+            FROM subscriptions
     ";
 
     return $pdo->query($sql)->fetch(PDO::FETCH_ASSOC) ?: [

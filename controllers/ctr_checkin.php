@@ -2,40 +2,50 @@
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/mdl_checkin.php';
 
-$message = '';
 $selectedDate = date('Y-m-d');
-
 $clients = getAllClients($pdo);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+function jsonResponse(array $data): void
+{
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    exit;
+}
 
+function isAjaxRequest(): bool
+{
+    return isset($_POST['ajax']) && $_POST['ajax'] === '1';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedDate = $_POST['attendance_date'] ?? date('Y-m-d');
+    $useSession = isset($_POST['use_session']) && $_POST['use_session'] === '1';
+
     $clientId = 0;
 
-    // QR first
     if (!empty($_POST['qr_token'])) {
-        $clientId = getClientIdByToken($pdo, $_POST['qr_token']);
-
-        if (!$clientId) {
-            $message = 'Invalid QR code.';
-        }
+        $clientId = getClientIdByToken($pdo, trim($_POST['qr_token']));
     } else {
         $clientId = (int)($_POST['client_id'] ?? 0);
     }
 
-    if ($clientId > 0 && $message === '') {
+    if ($clientId <= 0) {
+        $response = [
+            'status' => 'error',
+            'message' => 'Invalid client or QR code.',
+            'data' => null
+        ];
 
-        if (!hasValidSubscription($pdo, $clientId, $selectedDate)) {
-            $message = 'No valid subscription.';
+        if (isAjaxRequest()) {
+            jsonResponse($response);
+        }
+    }
 
-        } elseif (attendanceExists($pdo, $clientId, $selectedDate)) {
-            $message = 'Already checked in.';
+    if ($clientId > 0) {
+        $response = processCheckin($pdo, $clientId, $selectedDate, $useSession);
 
-        } elseif (insertAttendance($pdo, $clientId, $selectedDate)) {
-            $message = 'Check-in successful.';
-
-        } else {
-            $message = 'Insert failed.';
+        if (isAjaxRequest()) {
+            jsonResponse($response);
         }
     }
 }
