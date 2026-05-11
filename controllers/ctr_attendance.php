@@ -33,7 +33,8 @@ $columns = [
     'membership_type' => 'Membership Type',
     'pass_type' => 'Pass Type',
     'attendance_date' => 'Date',
-    'check_in_time' => 'Check-in Time'
+    'check_in_time' => 'Check-in Time',
+    'training_session_used' => 'Training Session'
 ];
 
 require_once __DIR__ . '/../views/vw_attendance.php';

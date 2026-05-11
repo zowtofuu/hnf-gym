@@ -86,7 +86,7 @@ function hnfSubscriptionEditLabel(string $value): string
             <p>
                 <label for="subscription_end">Subscription End</label><br>
                 <input type="date" id="subscription_end"
-                    value="<?= hnfSubscriptionEditE($subscriptionEnd) ?>" readonly>
+                    value="<?= hnfSubscriptionEditE($subscriptionEnd) ?>">
             </p>
 
             <p>

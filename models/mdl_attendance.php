@@ -2,14 +2,18 @@
 
 function getAttendanceList(PDO $pdo, array $filters = []): array
 {
-    $sql = "SELECT
-                a.attendance_id,
-                CONCAT(c.first_name, ' ', c.last_name) AS client_name,
-                c.contact,
-                mp.membership_type,
-                mp.pass_type,
-                a.attendance_date,
-                a.check_in_time
+   $sql = "SELECT
+            a.attendance_id,
+            CONCAT(c.first_name, ' ', c.last_name) AS client_name,
+            c.contact,
+            mp.membership_type,
+            mp.pass_type,
+            a.attendance_date,
+            a.check_in_time,
+            CASE 
+                WHEN a.training_session_used = 1 THEN 'Yes'
+                ELSE 'No'
+            END AS training_session_used
             FROM attendance a
             INNER JOIN clients c ON a.client_id = c.client_id
             LEFT JOIN subscriptions s ON c.client_id = s.client_id

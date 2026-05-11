@@ -87,6 +87,7 @@ CREATE TABLE attendance (
     client_id INT NOT NULL,
     attendance_date DATE NOT NULL,
     check_in_time TIME NOT NULL,
+    training_session_used TINYINT(1) NOT NULL DEFAULT 0
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_attendance_client

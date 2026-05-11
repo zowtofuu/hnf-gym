@@ -11,7 +11,7 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
-        <h2>Clients</h2>
+        <h2 class="legend">Clients</h2>
 
         <!-- CONTROLS -->
         <section style="display: flex; justify-content: space-between;">

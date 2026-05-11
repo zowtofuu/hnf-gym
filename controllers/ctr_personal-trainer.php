@@ -7,13 +7,17 @@ require_once __DIR__ . '/../models/mdl_personal-trainer.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['buy'])) {
-        $clientId = (int) $_POST['client_id'];
-        $type = $_POST['session_type'];
+        $clientId = (int) ($_POST['client_id'] ?? 0);
+        $type = $_POST['session_type'] ?? '';
 
-        if ($type === '1') {
-            buySession($pdo, $clientId, 1, 250);
-        } else {
-            buySession($pdo, $clientId, 14, 2800);
+        if ($clientId > 0 && !clientHasActiveSession($pdo, $clientId)) {
+            if ($type === '1') {
+                buySession($pdo, $clientId, 1, 250);
+            }
+
+            if ($type === '14') {
+                buySession($pdo, $clientId, 14, 2800);
+            }
         }
     }
 

@@ -31,7 +31,7 @@ function getClientIdByToken(PDO $pdo, string $token): ?int
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $row ? (int)$row['client_id'] : null;
+    return $row ? (int) $row['client_id'] : null;
 }
 
 function getClientName(PDO $pdo, int $clientId): string
@@ -107,16 +107,18 @@ function attendanceExists(PDO $pdo, int $clientId, string $date): bool
     return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
 }
 
-function insertAttendance(PDO $pdo, int $clientId, string $date): bool
+function insertAttendance(PDO $pdo, int $clientId, string $date, bool $useSession): bool
 {
     $sql = "INSERT INTO attendance (
                 client_id,
                 attendance_date,
-                check_in_time
+                check_in_time,
+                training_session_used
             ) VALUES (
                 :client_id,
                 :date,
-                :time
+                :time,
+                :training_session_used
             )";
 
     $stmt = $pdo->prepare($sql);
@@ -124,7 +126,8 @@ function insertAttendance(PDO $pdo, int $clientId, string $date): bool
     return $stmt->execute([
         ':client_id' => $clientId,
         ':date' => $date,
-        ':time' => date('H:i:s')
+        ':time' => date('H:i:s'),
+        ':training_session_used' => $useSession ? 1 : 0
     ]);
 }
 
@@ -176,7 +179,7 @@ function daysRemaining(?string $endDate, string $selectedDate): ?int
         return 0;
     }
 
-    return (int)$start->diff($end)->days;
+    return (int) $start->diff($end)->days;
 }
 
 function formatDisplayDate(?string $date): string
@@ -201,7 +204,7 @@ function buildCheckinFeedback(PDO $pdo, int $clientId, string $selectedDate, ?ar
         'membership_end' => $subscription ? formatDisplayDate($subscription['membership_end']) : 'N/A',
         'membership_days_remaining' => $subscription ? daysRemaining($subscription['membership_end'], $selectedDate) : null,
 
-        'remaining_sessions' => $training ? (int)$training['remaining_sessions'] : null
+        'remaining_sessions' => $training ? (int) $training['remaining_sessions'] : null
     ];
 }
 
@@ -228,7 +231,7 @@ function processCheckin(PDO $pdo, int $clientId, string $selectedDate, bool $use
     $training = getLatestTrainingPackage($pdo, $clientId);
 
     if ($useSession) {
-        if (!$training || (int)$training['remaining_sessions'] <= 0) {
+        if (!$training || (int) $training['remaining_sessions'] <= 0) {
             return [
                 'status' => 'error',
                 'message' => 'No remaining session available.',
@@ -240,7 +243,7 @@ function processCheckin(PDO $pdo, int $clientId, string $selectedDate, bool $use
     try {
         $pdo->beginTransaction();
 
-        $attendanceInserted = insertAttendance($pdo, $clientId, $selectedDate);
+        $attendanceInserted = insertAttendance($pdo, $clientId, $selectedDate, $useSession);
 
         if (!$attendanceInserted) {
             $pdo->rollBack();
@@ -253,7 +256,7 @@ function processCheckin(PDO $pdo, int $clientId, string $selectedDate, bool $use
         }
 
         if ($useSession && $training) {
-            decrementTrainingSession($pdo, (int)$training['id']);
+            decrementTrainingSession($pdo, (int) $training['id']);
         }
 
         $pdo->commit();

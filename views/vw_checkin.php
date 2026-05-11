@@ -8,169 +8,276 @@
     <script src="../assets/js/jsQR.min.js"></script>
 
     <style>
+        :root {
+            --color-primary: oklch(21% 0.006 285.885);
+            --color-secondary: oklch(91.499% 0.01683 250.98);
+            --color-accent: oklch(84.1% 0.238 128.85);
+            --color-accent-hover: oklch(84.1% 0.238 128.85 / 0.8);
+            --color-muted: oklch(81.78% 0.04656 257.64);
+            --color-muted-bg: oklch(98.4% 0.003 247.858);
+            --color-muted-primary: oklch(31.553% 0.01064 285.734);
+            --color-muted-border: oklch(85.1% 0.04656 257.64);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         .checkin-page {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
         }
 
+        /* ── Feedback bar ───────────────────────────────── */
         .feedback-box {
-            background: #d9d9d9;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
+            background: var(--color-secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid transparent;
+            transition: border-color 0.2s;
         }
 
-        .feedback-box h2 {
-            margin-top: 0;
-            margin-bottom: 1.5rem;
+        .feedback-box.success {
+            border-left-color: var(--color-accent);
+        }
+
+        .feedback-box.error {
+            border-left-color: #e55;
+        }
+
+        .feedback-box.warning {
+            border-left-color: #f0a500;
+        }
+
+        .feedback-inner {
+            width: 100%;
+        }
+
+        .feedback-default {
+            color: var(--color-muted-primary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .feedback-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin: 0 0 0.5rem;
+        }
+
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 0.3rem 2.5rem;
+            font-size: 0.85rem;
+        }
+
+        .feedback-grid .lbl {
+            color: var(--color-muted-primary);
+        }
+
+        .feedback-grid .val {
             font-weight: 500;
         }
 
-        .feedback-row {
+        .feedback-grid .rem {
+            color: var(--color-muted-primary);
+            font-size: 0.78rem;
+        }
+
+        /* ── Session checkbox ───────────────────────────── */
+        .session-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .session-row label {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .session-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--color-primary);
+            flex-shrink: 0;
+        }
+
+        /* ── Two-panel grid ─────────────────────────────── */
+        .checkin-cont {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            max-width: 520px;
-            margin: 0.9rem auto;
-            text-align: left;
-            gap: 2rem;
-        }
-
-        .feedback-row span:last-child {
-            text-align: left;
-        }
-
-        .feedback-box.error,
-        .feedback-box.warning {
-            padding: 2rem;
-        }
-
-        .checkin-cont {
-            display: flex;
-            gap: 1.2rem;
+            gap: 1.25rem;
             align-items: stretch;
         }
 
         .checkin-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .checkin-section .card {
             flex: 1;
         }
 
-        .checkin-section h3 {
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-bottom: 0.6rem;
-            text-transform: uppercase;
+        /* ── Two-panel grid ─────────────────────────────── */
+        .checkin-cont {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            align-items: stretch;
         }
 
-        .manual-card,
-        .qr-card {
-            background: #d9d9d9;
+        .checkin-section h3 {
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-muted-primary);
+            margin: 0 0 0.55rem;
+        }
+
+        .card {
+            background: var(--color-secondary);
             border-radius: 14px;
-            min-height: 280px;
             padding: 2rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            /* ← fill the stretched grid cell */
+            box-sizing: border-box;
         }
 
+        /* ── Manual form ─────────────────────────────────── */
         .manual-form {
-            width: 80%;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.1rem;
+            flex: 1;
         }
 
-        .manual-form label {
-            font-size: 0.85rem;
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .field-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-muted-primary);
         }
 
         .manual-form select,
         .manual-form input[type="date"] {
             width: 100%;
-            padding: 0.6rem;
-            border: 0;
-            border-radius: 5px;
+            padding: 0.6rem 0.75rem;
+            border: 1.5px solid var(--color-muted-border);
+            border-radius: 6px;
+            background: #fff;
+            font-size: 0.9rem;
+            color: var(--color-primary);
         }
 
-        .manual-form button {
-            padding: 0.7rem;
+        .manual-form select:focus,
+        .manual-form input[type="date"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .btn-submit {
+            margin-top: auto;
+            padding: 0.75rem;
             border: 0;
-            border-radius: 5px;
-            background: #333;
-            color: white;
+            border-radius: 7px;
+            background: var(--color-primary);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: opacity 0.15s;
         }
 
-        .session-check {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.1rem;
+        .btn-submit:hover {
+            opacity: 0.82;
         }
 
-        .session-check input {
-            width: 20px;
-            height: 20px;
-        }
-
+        /* ── QR card ─────────────────────────────────────── */
         .qr-card {
-            position: relative;
             overflow: hidden;
-            flex-direction: column;
+            justify-content: space-between;
         }
 
         #video {
             width: 100%;
-            height: 260px;
+            flex: 1;
+            min-height: 280px;
             object-fit: cover;
-            border-radius: 12px;
-            background: #cfcfcf;
+            border-radius: 10px;
+            background: var(--color-muted);
         }
 
         .video-placeholder {
             width: 100%;
-            height: 260px;
-            border-radius: 12px;
-            background: #d9d9d9;
+            flex: 1;
+            min-height: 280px;
+            border-radius: 10px;
+            background: var(--color-muted);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            transform: rotate(-30deg);
+            font-size: 1.5rem;
+            color: var(--color-muted-primary);
+            letter-spacing: 0.12em;
         }
 
         .qr-controls {
-            margin-top: 1rem;
             display: flex;
             justify-content: center;
+            padding-top: 1rem;
         }
 
         #toggleScanner {
-            width: 52px;
-            height: 52px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             border: 0;
-            background: #777;
-            color: white;
+            background: var(--color-muted-primary);
+            color: #fff;
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.15s;
+        }
+
+        #toggleScanner:hover {
+            opacity: 0.8;
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         @media (max-width: 768px) {
             .checkin-cont {
-                flex-direction: column;
-            }
-
-            .feedback-row {
                 grid-template-columns: 1fr;
-                gap: 0.2rem;
-                text-align: center;
             }
 
-            .feedback-row span:last-child {
-                text-align: center;
+            .feedback-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -179,39 +286,57 @@
 <body>
     <main class="checkin-page">
 
-        <section id="feedbackBox" class="feedback-box hidden">
-            <h2 id="feedbackTitle"></h2>
+        <!-- ① Feedback bar -->
+        <div id="feedbackBox" class="feedback-box">
+            <div class="feedback-inner">
+                <p id="feedbackDefault" class="feedback-default">
+                    Welcome to HNF Gym! Please attendance here.
+                </p>
 
-            <div id="successDetails" class="hidden">
-                <div class="feedback-row">
-                    <span>Pass End: <span id="passEnd">N/A</span></span>
-                    <span id="passRemaining">N/A</span>
-                </div>
+                <div id="feedbackResult" class="hidden">
+                    <p id="feedbackTitle" class="feedback-title"></p>
 
-                <div class="feedback-row">
-                    <span>Membership End: <span id="membershipEnd">N/A</span></span>
-                    <span id="membershipRemaining">N/A</span>
-                </div>
+                    <div id="successDetails" class="feedback-grid hidden">
+                        <span class="lbl">Name</span>
+                        <span class="val" id="clientName">—</span>
+                        <span></span>
 
-                <div class="feedback-row">
-                    <span>Remaining Session: <span id="remainingSession">N/A</span></span>
-                    <span></span>
+                        <span class="lbl">Pass ends</span>
+                        <span class="val" id="passEnd">—</span>
+                        <span class="rem" id="passRemaining"></span>
+
+                        <span class="lbl">Membership ends</span>
+                        <span class="val" id="membershipEnd">—</span>
+                        <span class="rem" id="membershipRemaining"></span>
+
+                        <span class="lbl">Remaining sessions</span>
+                        <span class="val" id="remainingSession">—</span>
+                        <span></span>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
+        <!-- ② Global session checkbox -->
+        <div class="session-row">
+            <label for="global_use_session">
+                <input type="checkbox"  name="use_session" id="global_use_session">
+                Use personal training session
+            </label>
+        </div>
+
+        <!-- ③ Two panels -->
         <div class="checkin-cont">
 
+            <!-- Manual -->
             <section class="checkin-section">
-                <h3>Manual Attendance</h3>
-
-                <div class="manual-card">
+                <h3>Manual</h3>
+                <div class="card">
                     <form method="POST" class="manual-form" id="manualForm">
-                        <div>
-                            <label for="client_id">Select Client</label>
+                        <div class="field-group">
+                            <label for="client_id">Select client</label>
                             <select name="client_id" id="client_id" required>
-                                <option value="">Select client</option>
-
+                                <option value="">— choose a client —</option>
                                 <?php foreach ($clients as $client): ?>
                                     <option value="<?= htmlspecialchars($client['client_id']) ?>">
                                         <?= htmlspecialchars($client['first_name'] . ' ' . $client['last_name']) ?>
@@ -220,44 +345,37 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label for="attendance_date">Attendance Date</label>
-                            <input 
-                                type="date" 
-                                name="attendance_date" 
-                                id="attendance_date" 
-                                value="<?= htmlspecialchars($selectedDate) ?>" 
-                                required
-                            >
+                        <div class="field-group">
+                            <label for="attendance_date">Attendance date</label>
+                            <input type="date" name="attendance_date" id="attendance_date"
+                                value="<?= htmlspecialchars($selectedDate) ?>" required>
                         </div>
 
-                        <label class="session-check" for="use_session">
-                            <input type="checkbox" name="use_session" id="use_session" value="1">
-                            Use session
-                        </label>
-
+                        <input type="hidden" name="use_session" id="manual_use_session" value="0">
                         <input type="hidden" name="ajax" value="1">
 
-                        <button type="submit">Mark Attendance</button>
+                        <button type="submit" class="btn-submit">Mark attendance</button>
                     </form>
                 </div>
             </section>
 
+            <!-- QR -->
             <section class="checkin-section">
-                <h3>QR Attendance</h3>
-
-                <div class="qr-card">
+                <h3>Scan QR</h3>
+                <div class="card qr-card">
                     <video id="video" autoplay muted playsinline></video>
                     <div id="videoPlaceholder" class="video-placeholder hidden">VIDEO</div>
                     <canvas id="canvas" style="display:none;"></canvas>
 
                     <div class="qr-controls">
-                        <button type="button" id="toggleScanner">⏸</button>
+                        <button type="button" id="toggleScanner" title="Pause / resume">▶</button>
                     </div>
 
                     <form method="POST" id="qrForm">
                         <input type="hidden" name="qr_token" id="qr_token">
-                        <input type="hidden" name="attendance_date" id="qr_attendance_date" value="<?= htmlspecialchars($selectedDate) ?>">
+                        <input type="hidden" name="attendance_date" id="qr_attendance_date"
+                            value="<?= htmlspecialchars($selectedDate) ?>">
+                        <input type="hidden" name="use_session" id="qr_use_session" value="0">
                         <input type="hidden" name="ajax" value="1">
                     </form>
                 </div>
@@ -271,9 +389,11 @@
 
     <script>
         const feedbackBox = document.getElementById('feedbackBox');
+        const feedbackDefault = document.getElementById('feedbackDefault');
+        const feedbackResult = document.getElementById('feedbackResult');
         const feedbackTitle = document.getElementById('feedbackTitle');
         const successDetails = document.getElementById('successDetails');
-
+        const clientName = document.getElementById('clientName');
         const passEnd = document.getElementById('passEnd');
         const passRemaining = document.getElementById('passRemaining');
         const membershipEnd = document.getElementById('membershipEnd');
@@ -284,138 +404,127 @@
         const attendanceDate = document.getElementById('attendance_date');
         const qrAttendanceDate = document.getElementById('qr_attendance_date');
 
+        const globalToggle = document.getElementById('global_use_session');
+        const manualSession = document.getElementById('manual_use_session');
+        const qrSession = document.getElementById('qr_use_session');
+
         const video = document.getElementById('video');
         const videoPlaceholder = document.getElementById('videoPlaceholder');
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
         const qrForm = document.getElementById('qrForm');
         const qrInput = document.getElementById('qr_token');
         const toggleScanner = document.getElementById('toggleScanner');
-
         const successSound = document.getElementById('successSound');
         const errorSound = document.getElementById('errorSound');
 
-        let stream = null;
         let scanning = true;
         let qrCooldown = false;
+        let feedbackTimer = null;
 
+        /* ── Sync global toggle → both hidden inputs ── */
+        function syncSession() {
+            const v = globalToggle.checked ? '1' : '0';
+            manualSession.value = v;
+            qrSession.value = v;
+        }
+        globalToggle.addEventListener('change', syncSession);
+        syncSession();
+
+        /* ── Keep QR date in sync with manual date picker ── */
+        attendanceDate.addEventListener('change', () => {
+            qrAttendanceDate.value = attendanceDate.value;
+        });
+
+        /* ── Sounds ── */
         function playSound(type) {
-            const sound = type === 'success' ? successSound : errorSound;
-
-            if (!sound) {
-                return;
-            }
-
-            sound.currentTime = 0;
-            sound.play().catch(() => {});
+            const s = type === 'success' ? successSound : errorSound;
+            if (!s) return;
+            s.currentTime = 0;
+            s.play().catch(() => { });
         }
 
-        function remainingText(value, fallback = 'N/A') {
-            if (value === null || value === undefined) {
-                return fallback;
-            }
-
-            const days = Number(value);
-            return days === 1 ? '1 day remaining' : `${days} days remaining`;
+        /* ── Feedback display ── */
+        function daysText(val) {
+            if (val === null || val === undefined) return '';
+            const d = Number(val);
+            return d === 1 ? '(1 day remaining)' : `(${d} days remaining)`;
         }
 
         function showFeedback(response) {
-            feedbackBox.classList.remove('hidden', 'success', 'error', 'warning');
+            feedbackBox.classList.remove('success', 'error', 'warning');
             feedbackBox.classList.add(response.status);
 
+            feedbackDefault.classList.add('hidden');
+            feedbackResult.classList.remove('hidden');
             feedbackTitle.textContent = response.message || 'Check-in result';
 
             if (response.status === 'success' && response.data) {
+                const d = response.data;
                 successDetails.classList.remove('hidden');
-
-                passEnd.textContent = response.data.pass_end || 'N/A';
-                passRemaining.textContent = remainingText(response.data.pass_days_remaining);
-
-                membershipEnd.textContent = response.data.membership_end || 'N/A';
-                membershipRemaining.textContent = remainingText(response.data.membership_days_remaining);
-
-                remainingSession.textContent = response.data.remaining_sessions ?? 'N/A';
+                clientName.textContent = d.client_name || '—';
+                passEnd.textContent = d.pass_end || '—';
+                passRemaining.textContent = daysText(d.pass_days_remaining);
+                membershipEnd.textContent = d.membership_end || '—';
+                membershipRemaining.textContent = daysText(d.membership_days_remaining);
+                remainingSession.textContent = d.remaining_sessions ?? '—';
             } else {
                 successDetails.classList.add('hidden');
             }
 
             playSound(response.status === 'success' ? 'success' : 'error');
 
-            setTimeout(() => {
-                feedbackBox.classList.add('hidden');
+            clearTimeout(feedbackTimer);
+            feedbackTimer = setTimeout(() => {
+                feedbackBox.classList.remove('success', 'error', 'warning');
+                feedbackDefault.classList.remove('hidden');
+                feedbackResult.classList.add('hidden');
+                successDetails.classList.add('hidden');
             }, 10000);
         }
 
+        /* ── AJAX ── */
         async function submitForm(form) {
-            const formData = new FormData(form);
-
-            const response = await fetch(window.location.href, {
+            const res = await fetch(window.location.href, {
                 method: 'POST',
-                body: formData
+                body: new FormData(form)
             });
-
-            return await response.json();
+            return res.json();
         }
 
-        manualForm.addEventListener('submit', async function (event) {
-            event.preventDefault();
-
-            const response = await submitForm(manualForm);
-            showFeedback(response);
+        /* ── Manual submit ── */
+        manualForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                showFeedback(await submitForm(manualForm));
+            } catch {
+                showFeedback({ status: 'error', message: 'Request failed.', data: null });
+            }
         });
 
-        attendanceDate.addEventListener('change', function () {
-            qrAttendanceDate.value = attendanceDate.value;
-        });
-
+        /* ── QR scanner ── */
         async function startCamera() {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'environment'
-                    }
-                });
-
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 video.srcObject = stream;
                 video.classList.remove('hidden');
                 videoPlaceholder.classList.add('hidden');
-
                 scanning = true;
                 toggleScanner.textContent = '⏸';
-
                 requestAnimationFrame(scanFrame);
-            } catch (error) {
+            } catch {
                 video.classList.add('hidden');
                 videoPlaceholder.classList.remove('hidden');
-                showFeedback({
-                    status: 'error',
-                    message: 'Camera not available.',
-                    data: null
-                });
+                showFeedback({ status: 'error', message: 'Camera not available.', data: null });
             }
-        }
-
-        function pauseScanner() {
-            scanning = false;
-            toggleScanner.textContent = '▶';
-        }
-
-        function resumeScanner() {
-            scanning = true;
-            toggleScanner.textContent = '⏸';
-            requestAnimationFrame(scanFrame);
         }
 
         function scanFrame() {
-            if (!scanning || qrCooldown) {
-                return;
-            }
+            if (!scanning || qrCooldown) return;
 
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
-
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -427,21 +536,12 @@
 
                     submitForm(qrForm)
                         .then(showFeedback)
-                        .catch(() => {
-                            showFeedback({
-                                status: 'error',
-                                message: 'QR check-in failed.',
-                                data: null
-                            });
-                        })
+                        .catch(() => showFeedback({ status: 'error', message: 'QR check-in failed.', data: null }))
                         .finally(() => {
                             setTimeout(() => {
                                 qrInput.value = '';
                                 qrCooldown = false;
-
-                                if (scanning) {
-                                    requestAnimationFrame(scanFrame);
-                                }
+                                if (scanning) requestAnimationFrame(scanFrame);
                             }, 2000);
                         });
 
@@ -452,11 +552,14 @@
             requestAnimationFrame(scanFrame);
         }
 
-        toggleScanner.addEventListener('click', function () {
+        toggleScanner.addEventListener('click', () => {
             if (scanning) {
-                pauseScanner();
+                scanning = false;
+                toggleScanner.textContent = '▶';
             } else {
-                resumeScanner();
+                scanning = true;
+                toggleScanner.textContent = '⏸';
+                requestAnimationFrame(scanFrame);
             }
         });
 
