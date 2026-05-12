@@ -1,30 +1,21 @@
-/* 
-==============================
-TABLE STYLES
-==============================
-*/
-/* .table-wrapper {
-  overflow: hidden;
-  overflow-x: scroll;
-} */
 
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  color: var(--color-primary);
+  color: var(--clr-stone-950);
   margin: 0 auto;
 }
 
 table thead {
-  border-bottom: 1px solid var(--color-primary);
+  border-bottom: 1px solid var(--clr-stone-950);
 }
 
 table th {
   text-align: left;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  color: var(--color-muted-primary);
+  color: var(--clr-slate-600);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -33,18 +24,18 @@ table th {
 
 table td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid var(--color-muted-border);
+  border-bottom: 1px solid var(--clr-slate-300);
   text-transform: capitalize;
 }
 
 table tbody tr:nth-child(even) {
-  background: oklch(98.4% 0.003 247.858);
+  background: var(--clr-slate-50);
 }
 
 table tbody tr {
-  transition: background 0.15s ease;
+  transition: background .3s ease;
 }
 
 table tbody tr:hover {
-  background: #e6fce4;
+  background: var(--clr-green-50);
 }

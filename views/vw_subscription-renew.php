@@ -1,11 +1,4 @@
-<?php
-declare(strict_types=1);
-
-function e(string $value): string
-{
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-}
-?>
+<?php ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,111 +6,240 @@ function e(string $value): string
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renew Subscription</title>
+    <title>Renewal</title>
+    <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
+    <div class="wrapper">
+        <?php if ($successMessage !== ''): ?>
+            <p class="alert alert-success js-alert"><?= hnfRenewalEscape($successMessage) ?></p>
+        <?php endif; ?>
 
-    <h1>Renew Subscription</h1>
+        <?php if ($errorMessage !== ''): ?>
+            <p class="alert alert-danger js-alert"><?= hnfRenewalEscape($errorMessage) ?></p>
+        <?php endif; ?>
+        <section class="flex justify-center">
+            <form class="client-form" method="POST">
+                <div class="flex flex-wrap justify-between items-baseline">
+                    <h3 class="legend">Renewal</h3>
+                    <p class="capitalize mb-sm">Name: <span
+                            class="muted-text"><?= hnfRenewalEscape($clientName) ?></span>
+                    </p>
+                </div>
+                <!-- information -->
+                <div class="form-group">
 
-    <?php if ($message !== ''): ?>
-        <p style="color: green;"><?= e($message) ?></p>
-    <?php endif; ?>
+                    <section>
+                        <p class="capitalize">Status:</p>
+                        <div>
+                            <span
+                                class="badge <?= $membershipStatus === 'Active' ? 'badge-active' : 'badge-expired' ?>">Membership:
+                                <span><?= hnfRenewalEscape($membershipStatus) ?></span></span>
+                            <span class="badge <?= $passStatus === 'Active' ? 'badge-active' : 'badge-expired' ?>">Pass:
+                                <span><?= hnfRenewalEscape($passStatus) ?></span></span>
+                        </div>
+                    </section>
+                </div>
 
-    <?php if ($error !== ''): ?>
-        <p style="color: red;"><?= e($error) ?></p>
-    <?php endif; ?>
+                <!-- prices -->
+                <div class="form-group">
+                    <p class="capitalize">Price:</p>
+                    <div class="flex flex-wrap gap-sm">
+                        <span class="badge badge-active">Membership Fee: ₱<span id="membershipFee">0.00</span></span>
+                        <span class="badge badge-active">Pass Fee: ₱ <span id="passFee">0.00</span></span>
+                        <span class="badge badge-yellow">Total Price: ₱<span id="totalPrice">0.00</span></span>
+                    </div>
+                </div>
 
-    <h2>Current Subscription Details</h2>
+                <!-- membership -->
+                <div class="form-group">
+                    <select class="capitalize rounded-sm px-md py-sm focus-visible" name="membership_type"
+                        id="membershipType">
+                        <option value="">select membership type</option>
 
-    <p><strong>Client Name:</strong> <?= e($fullName) ?></p>
-    <p><strong>Current Plan:</strong> <?= e($currentPlanName) ?></p>
-    <p><strong>Current Start Date:</strong> <?= e($currentStartDate) ?></p>
-    <p><strong>Current End Date:</strong> <?= e($currentEndDate) ?></p>
-    <p><strong>Status:</strong> <?= e($currentStatus) ?></p>
-    <p><strong>Subscription Token:</strong> <?= e($currentToken) ?></p>
+                        <?php foreach ($membershipTypes as $value => $label): ?>
+                            <option value="<?= hnfRenewalEscape($value) ?>">
+                                <?= hnfRenewalEscape($label) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-    <hr>
+                <div class="form-group">
+                    <label for="">Start Date</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="membership_start"
+                        id="membershipStart" value="<?= hnfRenewalEscape($currentMembershipStart) ?>">
+                </div>
 
-    <h2>Renewal Form</h2>
+                <div class="form-group">
+                    <label for="">End Date</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="membership_end"
+                        id="membershipEnd" value="<?= hnfRenewalEscape($currentMembershipEnd) ?>">
+                </div>
 
-    <form method="post">
-        <input type="hidden" name="subscription_id" value="<?= e((string) $subscriptionId) ?>">
+                <div class="form-group">
+                    <select class="capitalize rounded-sm px-md py-sm focus-visible" name="pass_type" id="passType">
+                        <option value="">select pass type</option>
 
-        <p>
-            <label for="new_plan_id">Plan</label><br>
-            <select name="new_plan_id" id="new_plan_id" required>
-                <option value="">-- Select Plan --</option>
+                        <?php foreach ($passTypes as $value => $label): ?>
+                            <option value="<?= hnfRenewalEscape($value) ?>">
+                                <?= hnfRenewalEscape($label) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-                <?php foreach ($plans as $plan): ?>
-                    <option value="<?= e((string) $plan['id']) ?>" <?= (int) $plan['id'] === (int) $newPlanId ? 'selected' : '' ?>>
-                        <?= e(formatPlanName($plan)) ?> - &#8369;<?= e(number_format((float) $plan['price'], 2)) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </p>
+                <div class="form-group">
+                    <label for="">Start Date</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="subscription_start"
+                        id="subscriptionStart" value="<?= hnfRenewalEscape($currentSubscriptionStart) ?>">
+                </div>
 
-        <p>
-            <label for="new_start_date">Start Date</label><br>
-            <input type="date" name="new_start_date" id="new_start_date" value="<?= e($newStartDate) ?>" required>
-        </p>
+                <div class="form-group">
+                    <label for="">End Date</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="subscription_end"
+                        id="subscriptionEnd" value="<?= hnfRenewalEscape($currentSubscriptionEnd) ?>">
+                </div>
 
-        <p>
-            <label for="new_end_date">End Date</label><br>
-            <input type="date" name="new_end_date" id="new_end_date" value="<?= e($newEndDate) ?>" readonly>
-        </p>
-
-        <p>
-            <button type="submit">Save Renewal</button>
-        </p>
-    </form>
+                <div class="form-actions">
+                    <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary"
+                        href="../controllers/ctr_subscriptions.php">Cancel</a>
+                    <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit"
+                        type="submit">Save Renewal</button>
+                </div>
+            </form>
+        </section>
+    </div>
 
     <script>
-        const plans = <?= json_encode($planJs, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        // auto refresh ui
+        const plans = <?= json_encode($plansForJs, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
 
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
+        const annualMembershipFee = <?= json_encode($annualMembershipFee) ?>;
+        const currentMembershipType = <?= json_encode($subscription['membership_type']) ?>;
+        const today = <?= json_encode(date('Y-m-d')) ?>;
 
-            return `${year}-${month}-${day}`;
+        const membershipType = document.getElementById('membershipType');
+        const passType = document.getElementById('passType');
+
+        const membershipStart = document.getElementById('membershipStart');
+        const membershipEnd = document.getElementById('membershipEnd');
+
+        const subscriptionStart = document.getElementById('subscriptionStart');
+        const subscriptionEnd = document.getElementById('subscriptionEnd');
+
+        const membershipFee = document.getElementById('membershipFee');
+        const passFee = document.getElementById('passFee');
+        const totalPrice = document.getElementById('totalPrice');
+
+        function formatMoney(amount) {
+            return Number(amount).toFixed(2);
         }
 
-        function computeEndDate(startDate, passType) {
-            if (!startDate || !passType) {
-                return '';
+        function addOneYear(dateValue) {
+            const date = new Date(dateValue + 'T00:00:00');
+            date.setFullYear(date.getFullYear() + 1);
+
+            return date.toISOString().slice(0, 10);
+        }
+
+        function addOneMonth(dateValue) {
+            const date = new Date(dateValue + 'T00:00:00');
+            date.setMonth(date.getMonth() + 1);
+
+            return date.toISOString().slice(0, 10);
+        }
+
+        function refreshMembershipDates() {
+            if (membershipType.value === '') {
+                return;
             }
 
-            const date = new Date(startDate + 'T00:00:00');
-
-            if (passType === 'monthly') {
-                date.setMonth(date.getMonth() + 1);
-                date.setDate(date.getDate() - 1);
+            if (membershipStart.value === '') {
+                membershipStart.value = today;
             }
 
-            return formatDate(date);
+            if (membershipType.value === 'member') {
+                membershipEnd.value = addOneYear(membershipStart.value);
+            } else {
+                membershipEnd.value = '';
+            }
         }
 
-        function getSelectedPassType(planId) {
-            const plan = plans.find(plan => String(plan.id) === String(planId));
-            return plan ? plan.pass_type : '';
+        function refreshPassDates() {
+            if (passType.value === '') {
+                return;
+            }
+
+            if (subscriptionStart.value === '') {
+                subscriptionStart.value = today;
+            }
+
+            if (passType.value === 'monthly') {
+                subscriptionEnd.value = addOneMonth(subscriptionStart.value);
+            } else {
+                subscriptionEnd.value = subscriptionStart.value;
+            }
         }
 
-        const planSelect = document.getElementById('new_plan_id');
-        const startInput = document.getElementById('new_start_date');
-        const endInput = document.getElementById('new_end_date');
+        function refreshPrice() {
+            const selectedMembershipType = membershipType.value;
+            const selectedPassType = passType.value;
 
-        function refreshEndDate() {
-            endInput.value = computeEndDate(
-                startInput.value,
-                getSelectedPassType(planSelect.value)
-            );
+            const finalMembershipType = selectedMembershipType !== ''
+                ? selectedMembershipType
+                : currentMembershipType;
+
+            let membershipAmount = 0;
+            let passAmount = 0;
+
+            if (selectedMembershipType === 'member') {
+                membershipAmount = Number(annualMembershipFee);
+            }
+
+            if (
+                selectedPassType !== '' &&
+                plans[finalMembershipType] &&
+                plans[finalMembershipType][selectedPassType]
+            ) {
+                passAmount = Number(plans[finalMembershipType][selectedPassType]);
+            }
+
+            membershipFee.textContent = formatMoney(membershipAmount);
+            passFee.textContent = formatMoney(passAmount);
+            totalPrice.textContent = formatMoney(membershipAmount + passAmount);
         }
 
-        planSelect.addEventListener('change', refreshEndDate);
-        startInput.addEventListener('change', refreshEndDate);
+        membershipType.addEventListener('change', function () {
+            refreshMembershipDates();
+            refreshPrice();
+        });
+
+        passType.addEventListener('change', function () {
+            refreshPassDates();
+            refreshPrice();
+        });
+
+        membershipStart.addEventListener('change', function () {
+            refreshMembershipDates();
+        });
+
+        subscriptionStart.addEventListener('change', function () {
+            refreshPassDates();
+        });
+
+        refreshPrice();
     </script>
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.js-alert').forEach((alert) => {
+                alert.style.display = 'none';
+            });
+        }, 2000);
+    </script>
+
 </body>
 
 </html>

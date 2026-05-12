@@ -1,89 +1,73 @@
 <?php
-declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/mdl_subscription-renew.php';
 
-$message = '';
-$error = '';
+$subscriptionId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-$subscriptionId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $subscriptionId = filter_input(INPUT_POST, 'subscription_id', FILTER_VALIDATE_INT);
+if ($subscriptionId <= 0) {
+    exit('Invalid subscription id.');
 }
 
-if (!$subscriptionId) {
-    die('Invalid or missing subscription ID.');
-}
+$successMessage = '';
+$errorMessage = '';
 
-$plans = getMembershipPlans($pdo);
-$subscription = getSubscriptionById($pdo, $subscriptionId);
+$subscription = hnfRenewalGetSubscription($pdo, $subscriptionId);
 
 if (!$subscription) {
-    die('Subscription not found.');
-}
-
-$fullName = trim($subscription['first_name'] . ' ' . $subscription['last_name']);
-
-$currentPlanName = formatPlanName($subscription);
-$currentStartDate = (string) $subscription['subscription_start'];
-$currentEndDate = (string) $subscription['subscription_end'];
-$currentStatus = (string) $subscription['status'];
-$currentToken = (string) $subscription['subscription_token'];
-
-$newPlanId = (int) $subscription['plan_id'];
-$newStartDate = date('Y-m-d');
-$newEndDate = computeEndDate($newStartDate, (string) $subscription['pass_type']);
-
-if (isset($_GET['success'])) {
-    $message = 'Subscription renewed successfully.';
+    exit('Subscription not found.');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newPlanId = filter_input(INPUT_POST, 'new_plan_id', FILTER_VALIDATE_INT);
-    $newStartDate = trim((string) ($_POST['new_start_date'] ?? ''));
+    $data = [
+        'membership_type' => $_POST['membership_type'] ?? '',
+        'pass_type' => $_POST['pass_type'] ?? '',
+        'membership_start' => $_POST['membership_start'] ?? '',
+        'membership_end' => $_POST['membership_end'] ?? '',
+        'subscription_start' => $_POST['subscription_start'] ?? '',
+        'subscription_end' => $_POST['subscription_end'] ?? ''
+    ];
 
-    if (!$newPlanId) {
-        $error = 'Please select a plan.';
-    } elseif ($newStartDate === '') {
-        $error = 'Please select a start date.';
-    } elseif (!isValidMembershipDate($newStartDate)) {
-        $error = 'Please select a valid start date.';
-    } else {
-        $selectedPlan = getMembershipPlanById($pdo, $newPlanId);
+    try {
+        hnfRenewalSave($pdo, $subscription, $data);
 
-        if (!$selectedPlan) {
-            $error = 'Selected plan does not exist.';
-        } else {
-            $newEndDate = computeEndDate($newStartDate, (string) $selectedPlan['pass_type']);
+        $successMessage = 'Renewal saved.';
 
-            try {
-                renewSubscription(
-                    $pdo,
-                    $subscription,
-                    $selectedPlan,
-                    $newStartDate,
-                    $newEndDate
-                );
-
-                header('Location: ctr_subscription-renew.php?id=' . $subscriptionId . '&success=1');
-                exit;
-            } catch (Throwable $e) {
-                $error = $e->getMessage();
-            }
-        }
+        $subscription = hnfRenewalGetSubscription($pdo, $subscriptionId);
+    } catch (Throwable $e) {
+        $errorMessage = $e->getMessage();
     }
 }
 
-$planJs = [];
+$plans = hnfRenewalGetAllPlans($pdo);
+$annualMembershipFee = hnfRenewalGetAnnualMembershipFee($pdo);
+
+$membershipTypes = [
+    'member' => 'Member',
+    'non_member' => 'Non-member',
+    'student_senior' => 'Student / Senior'
+];
+
+$passTypes = [
+    'daily' => 'Daily',
+    'monthly' => 'Monthly'
+];
+
+$plansForJs = [];
 
 foreach ($plans as $plan) {
-    $planJs[] = [
-        'id' => (int) $plan['id'],
-        'pass_type' => (string) $plan['pass_type'],
-        'price' => (float) $plan['price']
-    ];
+    $plansForJs[$plan['membership_type']][$plan['pass_type']] = (float) $plan['price'];
 }
+
+$clientName = trim(($subscription['first_name'] ?? '') . ' ' . ($subscription['last_name'] ?? ''));
+
+$membershipStatus = hnfRenewalStatus($subscription['membership_end'] ?? null);
+$passStatus = hnfRenewalStatus($subscription['subscription_end'] ?? null);
+
+$currentMembershipStart = hnfRenewalInputDate($subscription['membership_start'] ?? null);
+$currentMembershipEnd = hnfRenewalInputDate($subscription['membership_end'] ?? null);
+
+$currentSubscriptionStart = hnfRenewalInputDate($subscription['subscription_start'] ?? null);
+$currentSubscriptionEnd = hnfRenewalInputDate($subscription['subscription_end'] ?? null);
 
 require_once __DIR__ . '/../views/vw_subscription-renew.php';

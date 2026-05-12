@@ -1,50 +1,50 @@
 label {
   display: block;
+  font-size: 14px;
+  color: var(--clr-slate-600);
 }
 
 input {
-  border: 1px solid var(--color-primary);
-}
-
-.px8 {
-  padding-inline: 1rem;
-}
-
-.py16 {
-  padding-block: 0.5rem;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
-
-.rounded-sm {
-  border-radius: 0.3rem;
+  border: 1px solid var(--clr-stone-950);
 }
 
 .cursor-pointer {
   cursor: pointer;
 }
 
-.fv:focus-visible {
+.focus-visible:focus-visible {
   outline: none;
-  border: 1px solid greenyellow;
+  border: 1px solid var(--clr-lime-400);
 }
 /* PRIMARY BUTTON */
 .btn-primary {
-  background-color: greenyellow;
-  border: 1px solid greenyellow;
+  background-color: var(--clr-lime-400);
+  border: 1px solid var(--clr-lime-400);
+  transition: background 0.5ms ease;
+}
+.btn-primary:hover {
+  background-color: var(--clr-lime-500);
+}
+.btn-primary:disabled {
+  background-color: var(--clr-slate-300);
+  border: 1px solid var(--clr-slate-300);
+  cursor:not-allowed;
 }
 /* SECONDARY BUTTON */
 .btn-secondary {
   background-color: transparent;
-  border: 1px solid greenyellow;
+  border: 1px solid var(--clr-lime-400);
 }
 
+/* ANCHOR -  */
 .btn-anchor {
   text-align: center;
   text-decoration: none;
-  color: #1f1f1f;
+  color: var(--clr-stone-950);
+  transition: border 0.5ms ease;
+}
+.btn-anchor:hover {
+  border: 1px solid var(--clr-lime-500);
 }
 
 /* ICON BUTTON */
@@ -67,12 +67,12 @@ input {
   width: 40px;
   height: 40px;
 
-  color: #1f1f1f;
-  background: greenyellow;
+  color: var(--clr-stone-950);
+  background: var(--clr-lime-400);
 }
 
 .icon-button:hover {
-  background-color: yellowgreen;
+  background-color: var(--clr-lime-500);
 }
 
 .icon-button:active,
@@ -92,12 +92,11 @@ input {
   height: 25px;
   border: none;
   background-color: transparent;
-  fill: var(--clr-slate-500);
-  /* outline: 1px solid red; */
+  fill: var(--clr-slate-400);
 }
 
 .icon-button-plain:hover {
-  fill: yellowgreen;
+  fill: var(--clr-lime-500);
 }
 
 /* FORM AS BUTTON */
@@ -111,18 +110,21 @@ input {
   height: 25px;
   border: none;
   background-color: transparent;
-  fill: var(--clr-slate-500);
+  fill: var(--clr-slate-400);
   cursor: pointer;
 }
 
 .form-as-button button:hover {
-  fill: yellowgreen;
+  fill: var(--clr-lime-500);
 }
-
-/* section {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: baseline;
-  gap: 0.5rem;
-  padding: 1rem;
-} */
+.form-as-button.danger button:hover {
+  fill: var( --clr-rose-600);
+}
+.checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--clr-lime-400);
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+}

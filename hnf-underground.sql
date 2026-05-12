@@ -55,39 +55,12 @@ CREATE TABLE subscriptions (
         ON UPDATE CASCADE
 );
 
-CREATE TABLE subscriptions_history (
-    history_id INT AUTO_INCREMENT PRIMARY KEY,
-    subscription_id INT NOT NULL,
-    client_id INT NOT NULL,
-    plan_id INT NOT NULL,
-    subscription_start DATE NOT NULL,
-    subscription_end DATE NOT NULL,
-    subscription_token VARCHAR(100) NOT NULL,
-    status ENUM('active', 'expired', 'suspended') NOT NULL,
-    renewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_subscriptions_history_subscription
-        FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_subscriptions_history_client
-        FOREIGN KEY (client_id) REFERENCES clients(client_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_subscriptions_history_plan
-        FOREIGN KEY (plan_id) REFERENCES membership_plans(id)
-        ON DELETE RESTRICT
-        ON UPDATE CASCADE
-);
-
 CREATE TABLE attendance (
     attendance_id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     attendance_date DATE NOT NULL,
     check_in_time TIME NOT NULL,
-    training_session_used TINYINT(1) NOT NULL DEFAULT 0
+    training_session_used TINYINT(1) NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_attendance_client

@@ -10,17 +10,17 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
-        <h2 class="legend">Attendance List</h2>
+        <h3 class="legend">Attendance List</h3>
 
-        <section style="display: flex; justify-content: space-between;">
+        <section class="flex flex-wrap justify-between pb-md">
             <form method="GET" action="../controllers/ctr_attendance.php">
-                <input class="capitalize rounded-sm px8 py16 fv" type="text" name="search"
-                    placeholder="Search client or contact" value="<?= htmlspecialchars($filters['search']) ?>">
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" name="search"
+                    placeholder="Search client" value="<?= htmlspecialchars($filters['search']) ?>">
 
-                <input class="capitalize rounded-sm px8 py16 fv" type="date" name="date"
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="date"
                     value="<?= htmlspecialchars($filters['date']) ?>">
 
-                <select class="capitalize rounded-sm px8 py16 fv" name="membership_type">
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" name="membership_type">
                     <option value="all">All Membership Types</option>
                     <?php foreach ($membershipTypes as $type): ?>
                         <option value="<?= htmlspecialchars($type) ?>" <?= $filters['membership_type'] === $type ? 'selected' : '' ?>><?= htmlspecialchars(formatLabel($type)) ?>
@@ -28,7 +28,7 @@
                     <?php endforeach; ?>
                 </select>
 
-                <select class="capitalize rounded-sm px8 py16 fv" name="pass_type">
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" name="pass_type">
                     <option value="all">All Pass Types</option>
                     <?php foreach ($passTypes as $type): ?>
                         <option value="<?= htmlspecialchars($type) ?>" <?= $filters['pass_type'] === $type ? 'selected' : '' ?>>
@@ -37,8 +37,8 @@
                     <?php endforeach; ?>
                 </select>
 
-                <button class="capitalize rounded-sm px8 py16 cursor-pointer btn-primary" type="submit">Filter</button>
-                <a class="capitalize rounded-sm px8 py16 btn-anchor btn-secondary"
+                <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit">Filter</button>
+                <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary"
                     href="../controllers/ctr_attendance.php">Reset</a>
             </form>
             <section>
@@ -50,7 +50,6 @@
                 </a>
             </section>
         </section>
-        <br>
 
         <?php if (!empty($attendanceList)): ?>
 

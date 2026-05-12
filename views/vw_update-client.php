@@ -10,26 +10,39 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
-    <div class="wrapper">
+    <div class="wrapper flex justify-center">
         <?php if (!isset($client)): ?>
             <?php include '../components/alert.php'; ?>
         <?php else: ?>
 
-            <form action="../controllers/ctr_update-client.php" method="POST">
+            <form class="client-form" action="../controllers/ctr_update-client.php" method="POST">
                 <input type="hidden" name="client_id" value="<?= htmlspecialchars($client['client_id']) ?>">
 
-                <label>First Name:</label>
-                <input type="text" name="first_name" value="<?= htmlspecialchars($client['first_name']) ?>" required>
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" id="first_name" name="first_name"
+                        value="<?= htmlspecialchars($client['first_name']) ?>" required>
+                </div>
 
-                <label>Last Name:</label>
-                <input type="text" name="last_name" value="<?= htmlspecialchars($client['last_name']) ?>" required>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" id="last_name" name="last_name"
+                        value="<?= htmlspecialchars($client['last_name']) ?>" required>
+                </div>
 
-                <label>Contact:</label>
-                <input type="text" id="contact" name="contact" value="<?= htmlspecialchars($client['contact']) ?>"
-                    pattern="09[0-9]{9}" maxlength="11" inputmode="numeric" placeholder="09XXXXXXXXX" required>
+                <div class="form-group">
+                    <label for="contact">Contact</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" id="contact" name="contact"
+                        value="<?= htmlspecialchars($client['contact']) ?>" pattern="09[0-9]{9}" maxlength="11"
+                        inputmode="numeric" placeholder="09XXXXXXXXX" required>
+                    <small>Format: 09XXXXXXXXX</small>
+                </div>
 
-                <button type="submit">Update Client</button>
-                <a href="../controllers/ctr_clients.php">Cancel</a>
+                <div class="form-actions">
+                    <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary" href="../controllers/ctr_clients.php">Cancel</a>
+                    <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit">Update
+                        Client</button>
+                </div>
             </form>
 
         <?php endif; ?>

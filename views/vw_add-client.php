@@ -23,9 +23,7 @@
     $passTypes = passTypeLabels();
     ?>
 
-    <div class="wrapper">
-        <h1>Add Client</h1>
-
+    <div class="wrapper flex justify-center">
         <?php if (!empty($errors)): ?>
             <div role="alert">
                 <?php foreach ($errors as $error): ?>
@@ -34,56 +32,36 @@
             </div>
         <?php endif; ?>
 
-        <form class="forms-center" method="POST" action="../controllers/ctr_add-client.php">
+        <form class="client-form" method="POST" action="../controllers/ctr_add-client.php">
 
             <!-- FIRST NAME -->
-            <div>
+            <div class="form-group">
                 <label for="first_name">First Name</label>
-                <input
-                    class="capitalize rounded-sm px8 py16 fv"
-                    type="text"
-                    name="first_name"
-                    id="first_name"
-                    value="<?= htmlspecialchars((string) ($old['first_name'] ?? '')) ?>"
-                    required>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" name="first_name" id="first_name"
+                    value="<?= htmlspecialchars((string) ($old['first_name'] ?? '')) ?>" required>
             </div>
 
             <!-- LAST NAME -->
-            <div>
+            <div class="form-group">
                 <label for="last_name">Last Name</label>
-                <input
-                    class="capitalize rounded-sm px8 py16 fv"
-                    type="text"
-                    name="last_name"
-                    id="last_name"
-                    value="<?= htmlspecialchars((string) ($old['last_name'] ?? '')) ?>"
-                    required>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" name="last_name" id="last_name"
+                    value="<?= htmlspecialchars((string) ($old['last_name'] ?? '')) ?>" required>
             </div>
 
             <!-- CONTACT NUMBER -->
-            <div>
+            <div class="form-group">
                 <label for="contact">Contact Number</label>
-                <input
-                    class="rounded-sm px8 py16 fv"
-                    type="text"
-                    name="contact"
-                    id="contact"
-                    value="<?= htmlspecialchars((string) ($old['contact'] ?? '')) ?>"
-                    pattern="09[0-9]{9}"
-                    maxlength="11"
-                    inputmode="numeric"
-                    placeholder="09XXXXXXXXX"
-                    required>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" name="contact" id="contact"
+                    value="<?= htmlspecialchars((string) ($old['contact'] ?? '')) ?>" pattern="09[0-9]{9}"
+                    maxlength="11" inputmode="numeric" placeholder="09XXXXXXXXX" required>
             </div>
 
             <!-- MEMBERSHIP TYPE -->
-            <div>
+            <div class="form-group">
                 <label for="membership_type">Membership Type</label>
-                <select class="capitalize rounded-sm px8 py16 fv" name="membership_type" id="membership_type" required>
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" name="membership_type" id="membership_type" required>
                     <?php foreach ($membershipTypes as $value => $label): ?>
-                        <option
-                            value="<?= htmlspecialchars((string) $value) ?>"
-                            <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
+                        <option value="<?= htmlspecialchars((string) $value) ?>" <?= $selectedMembershipType === (string) $value ? 'selected' : '' ?>>
                             <?= htmlspecialchars((string) $label) ?>
                         </option>
                     <?php endforeach; ?>
@@ -91,13 +69,11 @@
             </div>
 
             <!-- PASS TYPE -->
-            <div>
+            <div class="form-group">
                 <label for="pass_type">Pass Type</label>
-                <select class="capitalize rounded-sm px8 py16 fv" name="pass_type" id="pass_type" required>
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" name="pass_type" id="pass_type" required>
                     <?php foreach ($passTypes as $value => $label): ?>
-                        <option
-                            value="<?= htmlspecialchars((string) $value) ?>"
-                            <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
+                        <option value="<?= htmlspecialchars((string) $value) ?>" <?= $selectedPassType === (string) $value ? 'selected' : '' ?>>
                             <?= htmlspecialchars((string) $label) ?>
                         </option>
                     <?php endforeach; ?>
@@ -105,27 +81,20 @@
             </div>
 
             <!-- PRICES -->
-            <div>
-                <span>Plan Fee: </span>
-                <span id="plan_price">-</span>
-            </div>
-
-            <div>
-                <span>Annual Membership Fee: </span>
-                <span id="annual_fee">-</span>
-            </div>
-
-            <div>
-                <strong>Total: </strong>
-                <strong id="total_price">-</strong>
+            <div class="flex gap-xsm"">
+                <span class="badge badge-active">Plan Fee: <span id="plan_price">-</span></span>
+                <span class="badge badge-active">Membership Fee: <span id="annual_fee">-</span></span>
+                <span class="badge badge-yellow">Total: <span id="total_price">-</span></span>
             </div>
 
             <!-- CONTROLS -->
-            <div>
-                <button type="submit">Add Client</button>
-                <a href="../controllers/ctr_clients.php">Cancel</a>
+            <div class="form-actions">
+                <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary" href="../controllers/ctr_clients.php">Cancel</a>
+                <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit" type="submit">Add Client</button>
             </div>
         </form>
+    </div>
+    </div>
     </div>
 
     <script>
@@ -137,6 +106,22 @@
         const planPriceOutput = document.getElementById('plan_price');
         const annualFeeOutput = document.getElementById('annual_fee');
         const totalPriceOutput = document.getElementById('total_price');
+
+        const contactInput = document.getElementById('contact');
+
+        contactInput.addEventListener('input', function () {
+            let value = contactInput.value.replace(/\D/g, '');
+
+            if (value.length >= 2 && value.slice(0, 2) !== '09') {
+                value = '09' + value.slice(2);
+            }
+
+            if (value.length > 11) {
+                value = value.slice(0, 11);
+            }
+
+            contactInput.value = value;
+        });
 
         function formatPeso(value) {
             const amount = Number(value || 0);

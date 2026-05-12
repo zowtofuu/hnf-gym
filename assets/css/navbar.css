@@ -1,19 +1,14 @@
-/* 
-===============================
-NAVBAR STYLES
-==============================
-*/
+/* NAV BAR */
 .navbar {
   width: 100%;
-  background: var(--color-primary);
+  background: var(--clr-stone-950);
   color: var(--color-secondary);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 5rem;
   position: sticky;
   top: 0;
 }
 
 .nav-container {
-  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -22,25 +17,17 @@ NAVBAR STYLES
 
 .logo svg {
 height: 32px;
-/* outline: 1px solid red; */
-}
-
-.nav-logo {
-  color: var(--color-accent);
-  text-decoration: none;
-  font-size: 1.3rem;
-  font-weight: bold;
 }
 
 .nav-menu {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: var(--md);
   align-items: center;
 }
 
 .nav-link {
-  color: #e5e7eb;
+  color: var(--clr-zinc-100);
   text-decoration: none;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
@@ -50,14 +37,14 @@ height: 32px;
 }
 
 .nav-link.active {
-  background: var(--color-accent);
-  color: var(--color-primary);
+  background: var(--clr-lime-400);
+  color: var(--clr-stone-950);
   pointer-events: none;
 }
 
 .nav-link:hover {
-  background: var(--color-accent);
-  color: var(--color-primary);
+  background: var(--clr-lime-500);
+  color: var(--clr-stone-950);
 }
 
 .nav-toggle {
@@ -65,7 +52,7 @@ height: 32px;
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: var(--lg);
   cursor: pointer;
 }
 
@@ -79,7 +66,7 @@ height: 32px;
     flex-direction: column;
     width: 100%;
     margin-top: 1rem;
-    background: #111827;
+    background: var(--clr-stone-950);
     padding: 1rem 0;
   }
 

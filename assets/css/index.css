@@ -2,11 +2,9 @@
 @import url("vars.css");
 @import url("navbar.css");
 @import url("table.css");
-@import url("utility.css");
 @import url("inputs.css");
-@import url("forms-center.css");
-
-
+@import url("utility.css");
+@import url("components.css");
 
 @font-face {
   font-family: "Inter";
@@ -16,12 +14,8 @@
   font-display: swap;
 }
 
-
-
-
-
-
-
-
-
+/* body {
+  background-image: radial-gradient(var(--clr-stone-950) 0.5px, #ffffff 0.5px);
+  background-size: 10px 10px;
+} */
 

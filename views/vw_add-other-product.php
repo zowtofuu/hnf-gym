@@ -10,41 +10,45 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
-    <div class="wrapper">
-        <h2>Add Other Product</h2>
+    <div class="wrapper flex justify-center">
 
         <?php if (!empty($error)): ?>
             <p><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-        <form action="../controllers/ctr_add-other-product.php" method="POST" enctype="multipart/form-data">
-            <p>
-                <label for="product_name">Product Name:</label><br>
-                <input type="text" id="product_name" name="product_name"
-                    value="<?= htmlspecialchars($_POST['product_name'] ?? '') ?>" required>
-            </p>
-            <p>
-                <label for="price">Price:</label><br>
-                <input type="number" id="price" name="price" min="0.01" step="0.01"
-                    value="<?= htmlspecialchars($_POST['price'] ?? '') ?>" required>
-            </p>
-            <p>
-                <label for="stock">Stock:</label><br>
-                <input type="number" id="stock" name="stock" min="0"
-                    value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>" required>
-            </p>
-            <p>
-                <label for="image">Product Image:</label><br>
-                <input type="file" id="image" name="image" accept="image/*">
-            </p>
-            <p>
-                <button type="submit">
+        <form class="client-form" action="../controllers/ctr_add-other-product.php" method="POST"
+            enctype="multipart/form-data">
+            <h3 class="legend">Add Other Product</h3>
+            <div class="form-group">
+                <label for="product_name">Product Name:</label>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" id="product_name"
+                    name="product_name" value="<?= htmlspecialchars($_POST['product_name'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="number" id="price" name="price"
+                    min="0.01" step="0.01" value="<?= htmlspecialchars($_POST['price'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock:</label>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="number" id="stock" name="stock"
+                    min="0" value="<?= htmlspecialchars($_POST['stock'] ?? '') ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Product Image:</label>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="file" id="image" name="image"
+                    accept="image/*">
+            </div>
+            <div class="form-actions">
+                <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary" href="../controllers/ctr_other-products.php">
+                    Cancel
+                </a>
+                <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit"
+                    type="submit">
                     Save Product
                 </button>
-            </p>
-            <a href="../controllers/ctr_other-products.php">
-                Cancel
-            </a>
+            </div>
+
         </form>
     </div>
 </body>

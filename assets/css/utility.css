@@ -1,61 +1,106 @@
-/* 
-==============================
-UTILITY STYLES
-==============================
-*/
+/* CONTAINER, WRAPPER, BOXES */
 .wrapper {
-  margin: 1.5rem 5rem ;
+  margin: 1.5rem 5rem;
 }
 
+.container-muted {
+  background-color: var(--clr-zinc-100);
+  border: 1px solid var(--clr-slate-400);
+  padding: var(--md);
+  border-radius: var(--sm);
+}
+
+/* FLEX */
 .flex {
   display: flex;
-  gap: 10px;
-  align-items: center;
 }
-
-.space-between {
+.justify-center{
+  justify-content: center;
+}
+.justify-between {
   justify-content: space-between;
 }
-
-.legend {
-  color: var(--clr-slate-500);
-  margin-bottom: 1.5rem;
+.justify-end {
+  justify-content: flex-end;
 }
 
-.message {
-  background-color: var(--color-muted-bg);
-  border: 1px solid var(--color-secondary);
-  padding: 1rem;
-  border-radius: 5px;
-  color: var(--color-muted-primary);
-  margin-block: 1.5rem;
+.items-center{
+  align-items: center;
 }
-
-.px {
-  padding-block: 1rem;
+.items-stretch{
+  align-items: stretch; 
 }
-
-.pb {
-    padding-bottom: 1rem;
+.items-baseline {
+  align-items: baseline;
 }
-.p1 {
-  padding: 1rem;
-}
-
-.rounded-container {
-  border-radius: 5px;
-  border: 1px solid var(--color-secondary);
-}
-
-.card-wrapper {
-  display: flex;
-  gap: 1rem;
+.flex-wrap {
   flex-wrap: wrap;
 }
-.card {
-  background-color: var(--color-muted-bg);
-  border: 1px solid var(--color-secondary);
-  padding: 1rem;
-  border-radius: 5px;
-  color: var(--color-muted-primary);
+.basis-1 {
+  flex: 1;
+}
+.gap-xsm {
+  gap: var(--xsm);
+}
+.gap-sm{
+  gap: var(--sm);
+}
+.gap-md{
+  gap: var(--md);
+}
+
+/* PADDING */
+.px-sm {
+  padding-inline: var(--sm);
+}
+.px-md {
+  padding-inline: var(--md);
+}
+.py-sm {
+  padding-block: var(--sm);
+}
+.py-md {
+  padding-block: var(--md);
+}
+.pb-sm {
+  padding-bottom: var(--sm);
+}
+.pb-md {
+  padding-bottom: var(--md);
+}
+.pb-lg {
+  padding-bottom: var(--lg);
+}
+.p-md {
+  padding: var(--md);
+}
+
+/* MARGIN */
+.mb-xsm {
+  margin-bottom: var(--xsm);
+}
+.mb-sm {
+  margin-bottom: var(--sm);
+}
+.mb-md {
+  margin-bottom: var(--md);
+}
+
+/* TEXT */
+.capitalize {
+  text-transform: capitalize;
+}
+
+.muted-text {
+  color: var(--clr-zinc-600);
+}
+
+/* BORDER RADIUS */
+.rounded-sm {
+  border-radius: var(--sm)
+}
+
+/* OTHERS */
+.border-bottom {
+  border-bottom: 1px solid var(--clr-slate-200);
 }

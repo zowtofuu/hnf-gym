@@ -33,12 +33,10 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
-        <h2>Personal Trainer</h2>
-        <br>
-
-        <section>
+        <h3 class="legend">Personal Trainer</h3>
+        <section class="flex flex-wrap pb-md">
             <form method="POST" id="buySessionForm">
-                <select name="client_id" id="client_id" required>
+                <select  class="capitalize rounded-sm px-md py-sm focus-visible" name="client_id" id="client_id" required>
                     <option value="">Select Client</option>
 
                     <?php foreach ($clients as $client): ?>
@@ -49,12 +47,12 @@
                     <?php endforeach; ?>
                 </select>
 
-                <select name="session_type" required>
+                <select  class="capitalize rounded-sm px-md py-sm focus-visible" name="session_type" required>
                     <option value="1">1 Session (₱250)</option>
                     <option value="14">14 Sessions (₱2800)</option>
                 </select>
 
-                <button type="submit" name="buy" id="buySessionBtn">
+                <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit" name="buy" id="buySessionBtn" onclick="return confirm('Are you sure you want to BUY the selected session?');">
                     Buy Session
                 </button>
             </form>
@@ -94,17 +92,17 @@
                                             value="<?= htmlspecialchars((string) $session['id']) ?>">
 
                                         <?php if ((int) $session['has_attendance_today'] === 0): ?>
-                                            <button type="button" disabled>
+                                            <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="button" disabled>
                                                 No Attendance Today
                                             </button>
 
                                         <?php elseif ((int) $session['used_today'] === 1): ?>
-                                            <button type="button" disabled>
+                                            <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="button" disabled>
                                                 Already Used Today
                                             </button>
 
                                         <?php else: ?>
-                                            <button type="submit" name="use">
+                                            <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit" name="use">
                                                 Use Session
                                             </button>
                                         <?php endif; ?>

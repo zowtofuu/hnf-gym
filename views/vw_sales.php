@@ -53,45 +53,38 @@ function salesValue(string $key, array $row): string
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
     <div class="wrapper">
-        <h2>Sales</h2>
+        <h3 class="legend">Sales</h3>
+        <section class="flex flex-wrap pb-md">
+            <form method="GET" action="ctr_sales.php">
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" id="date" name="date" value="<?= salesE($selectedDate) ?>">
 
-        <form method="GET" action="ctr_sales.php">
-            <label for="date">Select Date:</label>
-            <input type="date" id="date" name="date" value="<?= salesE($selectedDate) ?>">
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" id="transaction_type" name="transaction_type">
+                    <option value="all">All Transactions</option>
+                    <?php foreach ($transactionTypes as $type): ?>
+                        <option value="<?= salesE((string) $type) ?>" <?= $selectedTransaction === $type ? 'selected' : '' ?>>
+                            <?= salesE(salesLabel((string) $type)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-            <label for="transaction_type">Transaction:</label>
-            <select id="transaction_type" name="transaction_type">
-                <option value="all">All</option>
-                <?php foreach ($transactionTypes as $type): ?>
-                    <option value="<?= salesE((string) $type) ?>" <?= $selectedTransaction === $type ? 'selected' : '' ?>>
-                        <?= salesE(salesLabel((string) $type)) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+                <select class="capitalize rounded-sm px-md py-sm focus-visible" id="item_name" name="item_name">
+                    <option value="all">All Items</option>
+                    <?php foreach ($items as $item): ?>
+                        <option value="<?= salesE((string) $item) ?>" <?= $selectedItem === $item ? 'selected' : '' ?>>
+                            <?= salesE((string) $item) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
-            <label for="item_name">Item:</label>
-            <select id="item_name" name="item_name">
-                <option value="all">All</option>
-                <?php foreach ($items as $item): ?>
-                    <option value="<?= salesE((string) $item) ?>" <?= $selectedItem === $item ? 'selected' : '' ?>>
-                        <?= salesE((string) $item) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <button type="submit">Filter</button>
-        </form>
-
-        <br>
-
-        <div>
-            <strong>Today:</strong> <?= salesMoney($todayTotal) ?><br>
-            <strong>This Month:</strong> <?= salesMoney($monthlyTotal) ?><br>
-            <strong>This Year:</strong> <?= salesMoney($yearlyTotal) ?><br>
-            <strong>Selected Filter:</strong> <?= salesMoney($total) ?>
-        </div>
-
-        <br>
+                <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit">Filter</button>
+            </form>
+        </section>
+        <section class="flex flex-wrap pb-md gap-sm">
+            <span class="badge badge-active">Today: <span class="muted-text"><?= salesMoney($todayTotal) ?></span></span>
+            <span class="badge badge-active">This Month: <span class="muted-text"><?= salesMoney($monthlyTotal) ?></span></span>
+            <span class="badge badge-active">This Year: <span class="muted-text"><?= salesMoney($yearlyTotal) ?></span></span>
+            <span class="badge badge-active">Selected Filter: <span class="muted-text"><?= salesMoney($total) ?></span></span>
+        </section>
 
         <?php if (!empty($sales)): ?>
             <table>

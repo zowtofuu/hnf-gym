@@ -11,18 +11,18 @@
 <body>
     <?php include __DIR__ . '/../components/navbar.php'; ?>
     <div class="wrapper">
-        <h2 class="legend">Clients</h2>
+        <h3 class="legend">Clients</h3>
 
         <!-- CONTROLS -->
-        <section style="display: flex; justify-content: space-between;">
+        <section class="flex justify-between pb-md">
             <form method="GET" action="../controllers/ctr_clients.php">
-                <input class="capitalize rounded-sm px8 py16 fv" type="search" name="search"
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="search" name="search"
                     placeholder="Search client..." value="<?= htmlspecialchars($searchTerm ?? '') ?>">
 
-                <input class="capitalize rounded-sm px8 py16 cursor-pointer btn-primary" type="submit" value="Search">
+                <input class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit" value="Search">
 
-                <a class="capitalize rounded-sm px8 py16 btn-anchor btn-secondary"
-                    href="../controllers/ctr_clients.php">Clear</a>
+                <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary"
+                    href="../controllers/ctr_clients.php">Reset</a>
             </form>
             <a class="icon-button" href="../controllers/ctr_add-client.php" title="Add New Client">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
@@ -31,8 +31,6 @@
                 </svg>
             </a>
         </section>
-
-        <br>
 
         <!-- TABLE -->
         <section>

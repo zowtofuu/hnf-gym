@@ -25,17 +25,13 @@ function hnfSubscriptionEditLabel(string $value): string
     <?php include __DIR__ . '/../components/navbar.php'; ?>
 
     <div class="wrapper">
-        <h1>Edit Subscription</h1>
-
-        <p><strong>Client:</strong> <?= hnfSubscriptionEditE($clientName) ?></p>
 
         <?php if ($successMessage !== ''): ?>
-            <p><strong><?= hnfSubscriptionEditE($successMessage) ?></strong></p>
+            <p class="alert alert-success js-alert"><?= hnfSubscriptionEditE($successMessage) ?></p>
         <?php endif; ?>
 
         <?php if (!empty($errors)): ?>
-            <div>
-                <strong>Please fix the following:</strong>
+            <div class="alert alert-danger js-alert">Please fix the following:
                 <ul>
                     <?php foreach ($errors as $error): ?>
                         <li><?= hnfSubscriptionEditE($error) ?></li>
@@ -44,68 +40,74 @@ function hnfSubscriptionEditLabel(string $value): string
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="../controllers/ctr_subscription-edit.php">
-            <input type="hidden" name="subscription_id" value="<?= hnfSubscriptionEditE($subscriptionId) ?>">
+        <div class="flex justify-center">
+            <form class="client-form" method="POST" action="../controllers/ctr_subscription-edit.php">
+                <div class="mb-md capitalize"><strong>Client:</strong> <?= hnfSubscriptionEditE($clientName) ?></div>
+                <input type="hidden" name="subscription_id" value="<?= hnfSubscriptionEditE($subscriptionId) ?>">
 
-            <p>
-                <label for="membership_type">Membership Type</label><br>
-                <select name="membership_type" id="membership_type" required>
-                    <?php foreach ($membershipTypes as $type): ?>
-                        <option value="<?= hnfSubscriptionEditE($type['membership_type']) ?>"
-                            <?= $membershipType === $type['membership_type'] ? 'selected' : '' ?>>
-                            <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($type['membership_type'])) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
+                <div class="form-group">
+                    <label for="membership_type">Membership Type</label>
+                    <select class="capitalize rounded-sm px-md py-sm focus-visible" name="membership_type"
+                        id="membership_type" required>
+                        <?php foreach ($membershipTypes as $type): ?>
+                            <option value="<?= hnfSubscriptionEditE($type['membership_type']) ?>"
+                                <?= $membershipType === $type['membership_type'] ? 'selected' : '' ?>>
+                                <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($type['membership_type'])) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <!--  id="membership_start_group" -->
+                <div class="form-group">
+                    <label for="membership_start">Membership Start</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="membership_start"
+                        id="membership_start" value="<?= hnfSubscriptionEditE($membershipStart) ?>">
+                </div>
 
-            <p id="membership_start_group">
-                <label for="membership_start">Membership Start</label><br>
-                <input type="date" name="membership_start" id="membership_start"
-                    value="<?= hnfSubscriptionEditE($membershipStart) ?>">
-            </p>
+                <div class="form-group">
+                    <label for="pass_type">Pass Type</label>
+                    <select class="capitalize rounded-sm px-md py-sm focus-visible" name="pass_type" id="pass_type"
+                        required>
+                        <?php foreach ($passTypes as $pass): ?>
+                            <option value="<?= hnfSubscriptionEditE($pass['pass_type']) ?>"
+                                <?= $passType === $pass['pass_type'] ? 'selected' : '' ?>>
+                                <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($pass['pass_type'])) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <p>
-                <label for="pass_type">Pass Type</label><br>
-                <select name="pass_type" id="pass_type" required>
-                    <?php foreach ($passTypes as $pass): ?>
-                        <option value="<?= hnfSubscriptionEditE($pass['pass_type']) ?>"
-                            <?= $passType === $pass['pass_type'] ? 'selected' : '' ?>>
-                            <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($pass['pass_type'])) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
+                <div class="form-group">
+                    <label for="subscription_start">Subscription Start</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="subscription_start"
+                        id="subscription_start" value="<?= hnfSubscriptionEditE($subscriptionStart) ?>" required>
+                </div>
 
-            <p>
-                <label for="subscription_start">Subscription Start</label><br>
-                <input type="date" name="subscription_start" id="subscription_start"
-                    value="<?= hnfSubscriptionEditE($subscriptionStart) ?>" required>
-            </p>
+                <div class="form-group">
+                    <label for="subscription_end">Subscription End</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" id="subscription_end"
+                        value="<?= hnfSubscriptionEditE($subscriptionEnd) ?>">
+                </div>
 
-            <p>
-                <label for="subscription_end">Subscription End</label><br>
-                <input type="date" id="subscription_end"
-                    value="<?= hnfSubscriptionEditE($subscriptionEnd) ?>">
-            </p>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="capitalize rounded-sm px-md py-sm focus-visible" name="status" id="status" required>
+                        <?php foreach ($allowedStatuses as $statusOption): ?>
+                            <option value="<?= hnfSubscriptionEditE($statusOption) ?>" <?= $formStatus === $statusOption ? 'selected' : '' ?>>
+                                <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($statusOption)) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <p>
-                <label for="status">Status</label><br>
-                <select name="status" id="status" required>
-                    <?php foreach ($allowedStatuses as $statusOption): ?>
-                        <option value="<?= hnfSubscriptionEditE($statusOption) ?>"
-                            <?= $formStatus === $statusOption ? 'selected' : '' ?>>
-                            <?= hnfSubscriptionEditE(hnfSubscriptionEditLabel($statusOption)) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
-
-            <p>
-                <button type="submit">Update Subscription</button>
-                <a href="../controllers/ctr_subscriptions.php">Cancel</a>
-            </p>
-        </form>
+                <div class="form-actions">
+                    <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary"
+                        href="../controllers/ctr_subscriptions.php">Cancel</a>
+                    <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit" onclick="return confirm('Are you sure you want to EDIT this subscription?');">Update
+                        Subscription</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -176,6 +178,13 @@ function hnfSubscriptionEditLabel(string $value): string
 
         refreshMembershipField();
         refreshSubscriptionEnd();
+    </script>
+    <script>
+        setTimeout(() => {
+            document.querySelectorAll('.js-alert').forEach((alert) => {
+                alert.style.display = 'none';
+            });
+        }, 2000);
     </script>
 </body>
 
