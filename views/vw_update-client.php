@@ -31,6 +31,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="birthday">Birth Date</label>
+                    <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" id="birthday" name="birthday"
+                        value="<?= htmlspecialchars($client['birthday'] ?? '') ?>" required>
+                </div>
+
+                <div class="form-group">
                     <label for="contact">Contact</label>
                     <input class="capitalize rounded-sm px-md py-sm focus-visible" type="text" id="contact" name="contact"
                         value="<?= htmlspecialchars($client['contact']) ?>" pattern="09[0-9]{9}" maxlength="11"

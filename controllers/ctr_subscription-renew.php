@@ -64,6 +64,9 @@ $clientName = trim(($subscription['first_name'] ?? '') . ' ' . ($subscription['l
 $membershipStatus = hnfRenewalStatus($subscription['membership_end'] ?? null);
 $passStatus = hnfRenewalStatus($subscription['subscription_end'] ?? null);
 
+$isMembershipLocked = $membershipStatus === 'Active';
+$isPassLocked = $passStatus === 'Active';
+
 $currentMembershipStart = hnfRenewalInputDate($subscription['membership_start'] ?? null);
 $currentMembershipEnd = hnfRenewalInputDate($subscription['membership_end'] ?? null);
 

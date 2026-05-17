@@ -56,6 +56,12 @@
                     maxlength="11" inputmode="numeric" placeholder="09XXXXXXXXX" required>
             </div>
 
+            <div class="form-group">
+                <label for="birthday">Birthday</label>
+                <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="birthday" id="birthday"
+                    value="<?= htmlspecialchars((string) ($old['birthday'] ?? '')) ?>" required>
+            </div>
+
             <!-- MEMBERSHIP TYPE -->
             <div class="form-group">
                 <label for="membership_type">Membership Type</label>

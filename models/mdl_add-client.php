@@ -13,10 +13,11 @@ function addClient(PDO $pdo, array $data): int
     $firstName = trim((string) ($data['first_name'] ?? ''));
     $lastName = trim((string) ($data['last_name'] ?? ''));
     $contact = trim((string) ($data['contact'] ?? ''));
+    $birthday = trim((string) ($data['birthday'] ?? ''));
     $membershipType = trim((string) ($data['membership_type'] ?? ''));
     $passType = trim((string) ($data['pass_type'] ?? ''));
 
-    validateAddClientData($firstName, $lastName, $contact, $membershipType, $passType);
+    validateAddClientData($firstName, $lastName, $contact, $birthday, $membershipType, $passType);
 
     $pdo->beginTransaction();
 
@@ -27,7 +28,7 @@ function addClient(PDO $pdo, array $data): int
             throw new RuntimeException('Selected membership plan was not found.');
         }
 
-        $clientId = insertClient($pdo, $firstName, $lastName, $contact);
+        $clientId = insertClient($pdo, $firstName, $lastName, $contact, $birthday);
         $subscriptionId = insertClientSubscription($pdo, $clientId, $plan);
 
         insertSubscriptionSale($pdo, $subscriptionId, $clientId, $plan);
@@ -52,6 +53,7 @@ function validateAddClientData(
     string $firstName,
     string $lastName,
     string $contact,
+    string $birthday,
     string $membershipType,
     string $passType
 ): void {
@@ -67,6 +69,10 @@ function validateAddClientData(
         throw new InvalidArgumentException('Contact number must be 11 digits and start with 09.');
     }
 
+    if ($birthday === '') {
+        throw new InvalidArgumentException('Birthday is required.');
+    }
+
     if (!isValidMembershipType($membershipType)) {
         throw new InvalidArgumentException('Invalid membership type.');
     }
@@ -76,16 +82,17 @@ function validateAddClientData(
     }
 }
 
-function insertClient(PDO $pdo, string $firstName, string $lastName, string $contact): int
+function insertClient(PDO $pdo, string $firstName, string $lastName, string $contact, string $birthday): int
 {
-    $sql = "INSERT INTO clients (first_name, last_name, contact)
-            VALUES (:first_name, :last_name, :contact)";
+    $sql = "INSERT INTO clients (first_name, last_name, contact, birthday)
+            VALUES (:first_name, :last_name, :contact, :birthday)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':first_name' => $firstName,
         ':last_name' => $lastName,
         ':contact' => $contact,
+        ':birthday' => $birthday,
     ]);
 
     return (int) $pdo->lastInsertId();

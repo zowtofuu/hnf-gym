@@ -21,7 +21,8 @@
                         <canvas id="canvas" style="display:none;"></canvas>
 
                         <div class="qr-controls">
-                            <button class="scanner-toggle is-playing" type="button" id="toggleScanner" title="Pause scanner">
+                            <button class="scanner-toggle is-playing" type="button" id="toggleScanner"
+                                title="Pause scanner">
                                 <span id="scannerText">Pause scanner</span>
                             </button>
                         </div>
@@ -43,11 +44,17 @@
                             <form method="POST" class="manual-form" id="manualForm">
                                 <h3 class="legend">Manual Check-in</h3>
 
-                                <div class="form-group">
+                                <div class="flex justify-between mb-md">
                                     <label class="session-label" for="global_use_session">
                                         <input class="checkbox" type="checkbox" id="global_use_session" value="1">
                                         Use personal training session
                                     </label>
+                                    <a class="icon-button" href="" title="Refresh">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                            <path
+                                                d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z" />
+                                        </svg>
+                                    </a>
                                 </div>
 
                                 <div class="form-group">
@@ -95,7 +102,20 @@
                     <div id="feedbackResult" class="feedback-result hidden">
                         <p id="feedbackTitle" class="feedback-title"></p>
 
-                        <div id="successDetails" class="feedback-details hidden">
+                        <section id="successDetails" class="flex flex-wrap pb-md gap-sm hidden">
+                            <span class="badge badge-lg badge-active">Name: <span id="clientName"
+                                    class="muted-text">-</span></span>
+                            <span class="badge badge-lg badge-active">Pass ends: <span id="passEnd"
+                                    class="muted-text">-</span> &bull; <span id="passRemaining"
+                                    class="muted-text"></span></span>
+                            <span class="badge badge-lg badge-active">Membership ends: <span id="membershipEnd"
+                                    class="muted-text">-</span> &bull; <span id="membershipRemaining"
+                                    class="muted-text"></span></span>
+                            <span class="badge badge-lg badge-active">Remaining sessions: <span id="remainingSession"
+                                    class="muted-text"></span></span>
+                        </section>
+
+                        <!-- <div id="successDetails" class="feedback-details hidden">
                             <div class="feedback-row">
                                 <span>Name</span>
                                 <strong id="clientName">—</strong>
@@ -121,7 +141,7 @@
                                 <span>Remaining sessions</span>
                                 <strong id="remainingSession">—</strong>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -222,6 +242,19 @@
 
             clearDetails();
 
+            // if (status === 'success' && response.data) {
+            //     const data = response.data;
+
+            //     successDetails.classList.remove('hidden');
+            //     clientName.textContent = data.client_name || '—';
+            //     passEnd.textContent = data.pass_end || '—';
+            //     passRemaining.textContent = daysText(data.pass_days_remaining);
+            //     membershipEnd.textContent = data.membership_end || '—';
+            //     membershipRemaining.textContent = daysText(data.membership_days_remaining);
+            //     remainingSession.textContent = data.remaining_sessions ?? '—';
+            // } else {
+            //     successDetails.classList.add('hidden');
+            // }
             if (status === 'success' && response.data) {
                 const data = response.data;
 
@@ -232,6 +265,14 @@
                 membershipEnd.textContent = data.membership_end || '—';
                 membershipRemaining.textContent = daysText(data.membership_days_remaining);
                 remainingSession.textContent = data.remaining_sessions ?? '—';
+
+                clearTimeout(successDetails._hideTimer);
+                successDetails._hideTimer = setTimeout(() => {
+                    successDetails.classList.add('hidden');
+                    feedbackResult.classList.add('hidden');
+                    feedbackDefault.classList.remove('hidden');
+                    feedbackBox.classList.remove('success', 'error', 'warning');
+                }, 5000);
             } else {
                 successDetails.classList.add('hidden');
             }

@@ -8,6 +8,7 @@ function getAllClients(PDO $pdo)
             client_id,
             first_name,
             last_name,
+            birthday,
             created_at,
             contact
             FROM clients
@@ -23,7 +24,7 @@ function getAllClients(PDO $pdo)
 // Search clients based on the search term
 function searchClients(PDO $pdo, string $searchTerm): array
 {
-    $sql = "SELECT client_id, first_name, last_name, contact
+    $sql = "SELECT client_id, first_name, last_name, contact, birthday
             FROM clients
             WHERE first_name LIKE :first_name
             OR last_name LIKE :last_name
@@ -54,11 +55,12 @@ function deleteClient(PDO $pdo, int $clientId): bool
     ]);
 }
 
-function updateClient(PDO $pdo, int $clientId, string $firstName, string $lastName, string $contact): bool
+function updateClient(PDO $pdo, int $clientId, string $firstName, string $lastName, string $birthday, string $contact): bool
 {
     $sql = "UPDATE clients
             SET first_name = :first_name,
                 last_name = :last_name,
+                birthday = :birthday,
                 contact = :contact
             WHERE client_id = :client_id";
 
@@ -67,6 +69,7 @@ function updateClient(PDO $pdo, int $clientId, string $firstName, string $lastNa
     return $stmt->execute([
         ':first_name' => $firstName,
         ':last_name' => $lastName,
+        ':birthday' => $birthday,
         ':contact' => $contact,
         ':client_id' => $clientId
     ]);
@@ -74,7 +77,7 @@ function updateClient(PDO $pdo, int $clientId, string $firstName, string $lastNa
 
 function getClientById(PDO $pdo, int $clientId): ?array
 {
-    $sql = "SELECT client_id, first_name, last_name, contact
+    $sql = "SELECT client_id, first_name, last_name, contact, birthday
             FROM clients
             WHERE client_id = :client_id
             LIMIT 1";

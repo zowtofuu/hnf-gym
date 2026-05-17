@@ -8,6 +8,7 @@ $old = [
     'first_name' => '',
     'last_name' => '',
     'contact' => '',
+    'birthday' => '',
     'membership_type' => 'non_member',
     'pass_type' => 'daily',
 ];
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'first_name' => trim((string) ($_POST['first_name'] ?? '')),
         'last_name' => trim((string) ($_POST['last_name'] ?? '')),
         'contact' => trim((string) ($_POST['contact'] ?? '')),
+        'birthday' => trim((string) ($_POST['birthday'] ?? '')),
         'membership_type' => trim((string) ($_POST['membership_type'] ?? '')),
         'pass_type' => trim((string) ($_POST['pass_type'] ?? '')),
     ];
@@ -34,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         addClient($pdo, $old);
 
         header('Location: ../controllers/ctr_clients.php?added=1');
+        // header("Refresh:0; url=../controllers/ctr_checkin.php");
+        // header('Location: ../controllers/ctr_checkin.php?added=1');
         exit;
     } catch (Throwable $e) {
         $errors[] = 'Something went wrong: ' . $e->getMessage();

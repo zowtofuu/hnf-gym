@@ -40,6 +40,7 @@
             $columnLabels = [
                 'first_name' => 'First Name',
                 'last_name' => 'Last Name',
+                'birthday' => 'Birth Date',
                 'contact' => 'Contact Number'
             ];
 
@@ -75,7 +76,7 @@
                             <tr>
                                 <?php foreach ($visibleColumns as $column): ?>
                                     <td>
-                                        <?= htmlspecialchars($client[$column] ?? '') ?>
+                                        <?= htmlspecialchars($column === 'birthday'? formatReadableDate($client[$column] ?? '') : ($client[$column] ?? '')) ?>
                                     </td>
                                 <?php endforeach; ?>
 

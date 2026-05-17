@@ -68,13 +68,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="">Start Date</label>
+                    <label for="">Membership Start Date</label>
                     <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="membership_start"
                         id="membershipStart" value="<?= hnfRenewalEscape($currentMembershipStart) ?>">
                 </div>
 
-                <div class="form-group">
-                    <label for="">End Date</label>
+                <div class="form-group border-bottom mb-md pb-md">
+                    <label for="">Membership End Date</label>
                     <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="membership_end"
                         id="membershipEnd" value="<?= hnfRenewalEscape($currentMembershipEnd) ?>">
                 </div>
@@ -92,13 +92,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="">Start Date</label>
+                    <label for="">Subscription Start Date</label>
                     <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="subscription_start"
                         id="subscriptionStart" value="<?= hnfRenewalEscape($currentSubscriptionStart) ?>">
                 </div>
 
                 <div class="form-group">
-                    <label for="">End Date</label>
+                    <label for="">Subscription End Date</label>
                     <input class="capitalize rounded-sm px-md py-sm focus-visible" type="date" name="subscription_end"
                         id="subscriptionEnd" value="<?= hnfRenewalEscape($currentSubscriptionEnd) ?>">
                 </div>
@@ -107,7 +107,8 @@
                     <a class="capitalize rounded-sm px-md py-sm btn-anchor btn-secondary"
                         href="../controllers/ctr_subscriptions.php">Cancel</a>
                     <button class="capitalize rounded-sm px-md py-sm cursor-pointer btn-primary" type="submit"
-                        type="submit">Save Renewal</button>
+                        type="submit" onclick="return confirm('Are you sure you want to save this renewal?');">Save
+                        Renewal</button>
                 </div>
             </form>
         </section>
@@ -133,6 +134,9 @@
         const membershipFee = document.getElementById('membershipFee');
         const passFee = document.getElementById('passFee');
         const totalPrice = document.getElementById('totalPrice');
+
+        const isMembershipLocked = <?= json_encode($isMembershipLocked) ?>;
+        const isPassLocked = <?= json_encode($isPassLocked) ?>;
 
         function formatMoney(amount) {
             return Number(amount).toFixed(2);
@@ -231,6 +235,17 @@
         });
 
         refreshPrice();
+        if (isMembershipLocked) {
+            membershipType.disabled = true;
+            membershipStart.disabled = true;
+            membershipEnd.disabled = true;
+        }
+
+        if (isPassLocked) {
+            passType.disabled = true;
+            subscriptionStart.disabled = true;
+            subscriptionEnd.disabled = true;
+        }
     </script>
     <script>
         setTimeout(() => {
